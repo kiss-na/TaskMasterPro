@@ -22,9 +22,15 @@ let tasks = [
     description: 'Finish the proposal document for the client meeting',
     isCompleted: false,
     dueDate: '2025-04-15',
+    dueTime: '14:00',
+    calendarType: 'gregorian',
     priority: 'high',
     color: '#e53935',
-    hasReminder: true
+    hasReminder: true,
+    reminderTime: '13:00',
+    reminderFrequency: 'once',
+    contactPhone: '',
+    location: ''
   },
   {
     id: '2',
@@ -32,9 +38,15 @@ let tasks = [
     description: 'Milk, eggs, bread, vegetables',
     isCompleted: false,
     dueDate: '2025-04-12',
+    dueTime: '10:30',
+    calendarType: 'gregorian',
     priority: 'medium',
     color: '#fb8c00',
-    hasReminder: false
+    hasReminder: false,
+    reminderTime: '',
+    reminderFrequency: 'once',
+    contactPhone: '',
+    location: 'Supermarket'
   },
   {
     id: '3',
@@ -42,9 +54,15 @@ let tasks = [
     description: 'Ask about weekend plans',
     isCompleted: false,
     dueDate: '2025-04-13',
+    dueTime: '18:30',
+    calendarType: 'gregorian',
     priority: 'low',
     color: '#43a047',
-    hasReminder: true
+    hasReminder: true,
+    reminderTime: '18:00',
+    reminderFrequency: 'weekly',
+    contactPhone: '+1234567890',
+    location: ''
   }
 ];
 
@@ -64,6 +82,18 @@ function saveTasks() {
 
 // Generate task item HTML
 function generateTaskHTML(task) {
+  // Additional detail indicators
+  const hasLocation = task.location && task.location.trim() !== '';
+  const hasContact = task.contactPhone && task.contactPhone.trim() !== '';
+  
+  let additionalInfo = '';
+  if (hasLocation) {
+    additionalInfo += `<span class="task-location" title="${task.location}"><i class="material-icons">place</i></span>`;
+  }
+  if (hasContact) {
+    additionalInfo += `<span class="task-contact" title="${task.contactPhone}"><i class="material-icons">phone</i></span>`;
+  }
+  
   return `
     <div class="task-item" data-id="${task.id}" style="border-left: 4px solid ${task.color}">
       <div class="task-checkbox-container">
@@ -73,10 +103,13 @@ function generateTaskHTML(task) {
       <div class="task-content ${task.isCompleted ? 'completed' : ''}">
         <div class="task-title">${task.title}</div>
         <div class="task-details">
-          <span class="task-due-date">${formatDate(task.dueDate)}</span>
+          <span class="task-due-date">${formatDate(task.dueDate, task.dueTime)}</span>
           <span class="task-priority" style="background-color: ${task.color}">${PRIORITY_LEVELS[task.priority].name}</span>
           ${task.hasReminder ? '<span class="task-reminder"><i class="material-icons">alarm</i></span>' : ''}
+          ${additionalInfo}
         </div>
+        ${task.calendarType && task.calendarType !== 'gregorian' ? 
+          `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
       </div>
       <div class="task-actions">
         <button class="task-edit-btn"><i class="material-icons">edit</i></button>
@@ -87,9 +120,20 @@ function generateTaskHTML(task) {
 }
 
 // Format date for display
-function formatDate(dateStr) {
+function formatDate(dateStr, timeStr) {
   const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const dateText = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  
+  if (timeStr) {
+    // Convert 24h time to 12h format
+    let [hours, minutes] = timeStr.split(':');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Convert 0 to 12
+    const timeText = `${hours}:${minutes} ${ampm}`;
+    return `${dateText}, ${timeText}`;
+  }
+  
+  return dateText;
 }
 
 // Render all tasks
@@ -174,6 +218,24 @@ function showTaskForm(task = null) {
   const isEditing = !!task;
   const formTitle = isEditing ? 'Edit Task' : 'New Task';
   
+  // Calendar types from the calendar module
+  const calendarTypeOptions = `
+    <option value="gregorian" ${isEditing && task?.calendarType === 'gregorian' ? 'selected' : ''}>Gregorian</option>
+    <option value="nepali" ${isEditing && task?.calendarType === 'nepali' ? 'selected' : ''}>Nepali</option>
+    <option value="chinese" ${isEditing && task?.calendarType === 'chinese' ? 'selected' : ''}>Chinese</option>
+    <option value="islamic" ${isEditing && task?.calendarType === 'islamic' ? 'selected' : ''}>Islamic</option>
+  `;
+  
+  // Reminder frequency options
+  const reminderFrequencyOptions = `
+    <option value="once" ${isEditing && task?.reminderFrequency === 'once' ? 'selected' : ''}>Once</option>
+    <option value="daily" ${isEditing && task?.reminderFrequency === 'daily' ? 'selected' : ''}>Daily</option>
+    <option value="weekly" ${isEditing && task?.reminderFrequency === 'weekly' ? 'selected' : ''}>Weekly</option>
+    <option value="monthly" ${isEditing && task?.reminderFrequency === 'monthly' ? 'selected' : ''}>Monthly</option>
+    <option value="yearly" ${isEditing && task?.reminderFrequency === 'yearly' ? 'selected' : ''}>Yearly</option>
+    <option value="custom" ${isEditing && task?.reminderFrequency === 'custom' ? 'selected' : ''}>Custom</option>
+  `;
+  
   const modalHTML = `
     <div class="modal-overlay" id="task-modal">
       <div class="modal-content">
@@ -191,10 +253,26 @@ function showTaskForm(task = null) {
               <label for="task-description">Description (optional)</label>
               <textarea id="task-description">${isEditing ? task.description : ''}</textarea>
             </div>
+            
+            <!-- Due Date and Time Section -->
             <div class="form-group">
-              <label for="task-due-date">Due Date</label>
-              <input type="date" id="task-due-date" required value="${isEditing ? task.dueDate : getTodayDate()}">
+              <label>Calendar Type</label>
+              <select id="task-calendar-type">
+                ${calendarTypeOptions}
+              </select>
             </div>
+            
+            <div class="form-row">
+              <div class="form-group form-group-half">
+                <label for="task-due-date">Due Date</label>
+                <input type="date" id="task-due-date" required value="${isEditing ? task.dueDate : getTodayDate()}">
+              </div>
+              <div class="form-group form-group-half">
+                <label for="task-due-time">Due Time</label>
+                <input type="time" id="task-due-time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
+              </div>
+            </div>
+            
             <div class="form-group">
               <label>Priority</label>
               <div class="priority-options">
@@ -213,12 +291,70 @@ function showTaskForm(task = null) {
                 </label>
               </div>
             </div>
-            <div class="form-group">
-              <label class="checkbox-container">
-                <input type="checkbox" id="task-reminder" ${isEditing && task.hasReminder ? 'checked' : ''}>
-                <span class="checkbox-label">Set reminder</span>
-              </label>
+            
+            <!-- Reminder Section (Collapsible) -->
+            <div class="collapsible-section">
+              <div class="collapsible-header">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="task-reminder" ${isEditing && task.hasReminder ? 'checked' : ''}>
+                  <span class="checkbox-label">Set reminder</span>
+                </label>
+                <i class="material-icons collapsible-icon">expand_more</i>
+              </div>
+              <div class="collapsible-content" id="reminder-details" style="display: ${isEditing && task.hasReminder ? 'block' : 'none'}">
+                <div class="form-row">
+                  <div class="form-group form-group-half">
+                    <label for="task-reminder-time">Reminder Time</label>
+                    <input type="time" id="task-reminder-time" value="${isEditing && task.reminderTime ? task.reminderTime : ''}">
+                  </div>
+                  <div class="form-group form-group-half">
+                    <label for="task-reminder-frequency">Frequency</label>
+                    <select id="task-reminder-frequency">
+                      ${reminderFrequencyOptions}
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
+            
+            <!-- Contact Section (Collapsible) -->
+            <div class="collapsible-section">
+              <div class="collapsible-header">
+                <label>Contact Information</label>
+                <i class="material-icons collapsible-icon">expand_more</i>
+              </div>
+              <div class="collapsible-content">
+                <div class="form-group">
+                  <label for="task-contact-phone">Phone Number</label>
+                  <div class="input-with-button">
+                    <input type="tel" id="task-contact-phone" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
+                    <button type="button" class="input-button" id="contact-picker-btn">
+                      <i class="material-icons">contact_phone</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Location Section (Collapsible) -->
+            <div class="collapsible-section">
+              <div class="collapsible-header">
+                <label>Location</label>
+                <i class="material-icons collapsible-icon">expand_more</i>
+              </div>
+              <div class="collapsible-content">
+                <div class="form-group">
+                  <label for="task-location">Place</label>
+                  <div class="input-with-button">
+                    <input type="text" id="task-location" value="${isEditing && task.location ? task.location : ''}">
+                    <button type="button" class="input-button" id="location-picker-btn">
+                      <i class="material-icons">place</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div class="form-actions">
               ${isEditing ? '<input type="hidden" id="task-id" value="' + task.id + '">' : ''}
               <button type="button" class="btn-cancel">Cancel</button>
@@ -240,10 +376,184 @@ function showTaskForm(task = null) {
   document.querySelector('.btn-cancel').addEventListener('click', closeTaskForm);
   document.getElementById('task-form').addEventListener('submit', saveTaskForm);
   
+  // Collapsible sections
+  document.querySelectorAll('.collapsible-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      // Don't toggle if clicking the checkbox itself
+      if (e.target.type === 'checkbox') return;
+      
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('.collapsible-icon');
+      const isVisible = content.style.display !== 'none';
+      
+      content.style.display = isVisible ? 'none' : 'block';
+      icon.textContent = isVisible ? 'expand_more' : 'expand_less';
+    });
+  });
+  
+  // Special handling for reminder checkbox
+  const reminderCheckbox = document.getElementById('task-reminder');
+  reminderCheckbox.addEventListener('change', function() {
+    const reminderDetails = document.getElementById('reminder-details');
+    reminderDetails.style.display = this.checked ? 'block' : 'none';
+  });
+  
+  // Contact picker button
+  document.getElementById('contact-picker-btn').addEventListener('click', function() {
+    // In a real implementation, this would open the device contacts
+    // For now, we'll show a simulated contact picker
+    showContactPicker();
+  });
+  
+  // Location picker button
+  document.getElementById('location-picker-btn').addEventListener('click', function() {
+    // In a real implementation, this would open the Google Maps integration
+    // For now, we'll show a simulated location picker
+    showLocationPicker();
+  });
+  
   // Show modal with animation
   setTimeout(() => {
     document.getElementById('task-modal').classList.add('active');
   }, 10);
+}
+
+// Simulated contact picker
+function showContactPicker() {
+  const contacts = [
+    { name: 'John Smith', phone: '+15551234567' },
+    { name: 'Jane Doe', phone: '+15559876543' },
+    { name: 'Alice Johnson', phone: '+15552223333' },
+    { name: 'Bob Brown', phone: '+15554445555' }
+  ];
+  
+  const pickerHTML = `
+    <div class="modal-overlay" id="contact-picker-modal">
+      <div class="modal-content picker-content">
+        <div class="modal-header">
+          <h2>Select Contact</h2>
+          <button class="modal-close-btn"><i class="material-icons">close</i></button>
+        </div>
+        <div class="modal-body">
+          <div class="picker-search">
+            <input type="text" placeholder="Search contacts..." class="picker-search-input">
+          </div>
+          <div class="picker-list">
+            ${contacts.map(contact => `
+              <div class="picker-item" data-value="${contact.phone}">
+                <i class="material-icons picker-item-icon">person</i>
+                <div class="picker-item-details">
+                  <div class="picker-item-title">${contact.name}</div>
+                  <div class="picker-item-subtitle">${contact.phone}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add picker to body
+  const pickerContainer = document.createElement('div');
+  pickerContainer.innerHTML = pickerHTML;
+  document.body.appendChild(pickerContainer);
+  
+  // Add event listeners
+  document.querySelector('#contact-picker-modal .modal-close-btn').addEventListener('click', function() {
+    document.getElementById('contact-picker-modal').remove();
+  });
+  
+  document.querySelectorAll('#contact-picker-modal .picker-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const phoneNumber = this.dataset.value;
+      document.getElementById('task-contact-phone').value = phoneNumber;
+      document.getElementById('contact-picker-modal').remove();
+    });
+  });
+  
+  // Show the search functionality (simulated)
+  document.querySelector('.picker-search-input').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    document.querySelectorAll('.picker-item').forEach(item => {
+      const name = item.querySelector('.picker-item-title').textContent.toLowerCase();
+      const phone = item.querySelector('.picker-item-subtitle').textContent.toLowerCase();
+      const match = name.includes(searchTerm) || phone.includes(searchTerm);
+      item.style.display = match ? 'flex' : 'none';
+    });
+  });
+}
+
+// Simulated location picker
+function showLocationPicker() {
+  const locations = [
+    { name: 'Office', address: '123 Business Ave, Suite 200' },
+    { name: 'Home', address: '456 Residential St' },
+    { name: 'Gym', address: 'FitLife Center, 789 Health Blvd' },
+    { name: 'Supermarket', address: 'GreenMart, 321 Shopping Ln' }
+  ];
+  
+  const pickerHTML = `
+    <div class="modal-overlay" id="location-picker-modal">
+      <div class="modal-content picker-content">
+        <div class="modal-header">
+          <h2>Select Location</h2>
+          <button class="modal-close-btn"><i class="material-icons">close</i></button>
+        </div>
+        <div class="modal-body">
+          <div class="picker-search">
+            <input type="text" placeholder="Search locations..." class="picker-search-input">
+          </div>
+          <div class="picker-map">
+            <div class="map-placeholder">
+              <i class="material-icons">map</i>
+              <div>Map View (Simulated)</div>
+            </div>
+          </div>
+          <div class="picker-list">
+            ${locations.map(location => `
+              <div class="picker-item" data-value="${location.name}">
+                <i class="material-icons picker-item-icon">place</i>
+                <div class="picker-item-details">
+                  <div class="picker-item-title">${location.name}</div>
+                  <div class="picker-item-subtitle">${location.address}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add picker to body
+  const pickerContainer = document.createElement('div');
+  pickerContainer.innerHTML = pickerHTML;
+  document.body.appendChild(pickerContainer);
+  
+  // Add event listeners
+  document.querySelector('#location-picker-modal .modal-close-btn').addEventListener('click', function() {
+    document.getElementById('location-picker-modal').remove();
+  });
+  
+  document.querySelectorAll('#location-picker-modal .picker-item').forEach(item => {
+    item.addEventListener('click', function() {
+      const location = this.dataset.value;
+      document.getElementById('task-location').value = location;
+      document.getElementById('location-picker-modal').remove();
+    });
+  });
+  
+  // Show the search functionality (simulated)
+  document.querySelector('.picker-search-input').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    document.querySelectorAll('.picker-item').forEach(item => {
+      const name = item.querySelector('.picker-item-title').textContent.toLowerCase();
+      const address = item.querySelector('.picker-item-subtitle').textContent.toLowerCase();
+      const match = name.includes(searchTerm) || address.includes(searchTerm);
+      item.style.display = match ? 'flex' : 'none';
+    });
+  });
 }
 
 // Get today's date formatted for date input
@@ -273,8 +583,16 @@ function saveTaskForm(e) {
   const title = form.querySelector('#task-title').value.trim();
   const description = form.querySelector('#task-description').value.trim();
   const dueDate = form.querySelector('#task-due-date').value;
+  const dueTime = form.querySelector('#task-due-time').value;
+  const calendarType = form.querySelector('#task-calendar-type').value;
   const priority = form.querySelector('input[name="priority"]:checked').value;
   const hasReminder = form.querySelector('#task-reminder').checked;
+  
+  // Additional fields
+  const reminderTime = form.querySelector('#task-reminder-time')?.value || '';
+  const reminderFrequency = form.querySelector('#task-reminder-frequency')?.value || 'once';
+  const contactPhone = form.querySelector('#task-contact-phone')?.value || '';
+  const location = form.querySelector('#task-location')?.value || '';
   
   if (!title) {
     alert('Please enter a task title');
@@ -288,9 +606,24 @@ function saveTaskForm(e) {
       task.title = title;
       task.description = description;
       task.dueDate = dueDate;
+      task.dueTime = dueTime;
+      task.calendarType = calendarType;
       task.priority = priority;
       task.color = PRIORITY_LEVELS[priority].color;
       task.hasReminder = hasReminder;
+      
+      // Update additional fields
+      if (hasReminder) {
+        task.reminderTime = reminderTime;
+        task.reminderFrequency = reminderFrequency;
+      } else {
+        task.reminderTime = '';
+        task.reminderFrequency = 'once';
+      }
+      
+      task.contactPhone = contactPhone;
+      task.location = location;
+      
       showSnackbar('Task updated');
     }
   } else {
@@ -301,9 +634,15 @@ function saveTaskForm(e) {
       description,
       isCompleted: false,
       dueDate,
+      dueTime,
+      calendarType,
       priority,
       color: PRIORITY_LEVELS[priority].color,
-      hasReminder
+      hasReminder,
+      reminderTime: hasReminder ? reminderTime : '',
+      reminderFrequency: hasReminder ? reminderFrequency : 'once',
+      contactPhone,
+      location
     };
     tasks.push(newTask);
     showSnackbar('Task added');

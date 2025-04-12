@@ -220,6 +220,7 @@ main {
 .form-group input[type="date"],
 .form-group input[type="time"],
 .form-group input[type="number"],
+.form-group input[type="tel"],
 .form-group textarea,
 .form-group select {
   width: 100%;
@@ -240,6 +241,155 @@ main {
 .form-group textarea {
   min-height: 100px;
   resize: vertical;
+}
+
+/* Form row with columns */
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group-half {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Input with button */
+.input-with-button {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-button input {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-button {
+  padding: 10px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.input-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Collapsible sections */
+.collapsible-section {
+  margin-bottom: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  user-select: none;
+}
+
+.collapsible-content {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.collapsible-icon {
+  transition: transform 0.3s;
+}
+
+.collapsible-header:hover {
+  background-color: #f5f5f5;
+}
+
+/* Picker components (Contacts & Location) */
+.picker-content {
+  max-width: 600px;
+  max-height: 80vh;
+}
+
+.picker-search {
+  margin-bottom: 16px;
+}
+
+.picker-search-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.picker-map {
+  height: 160px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-placeholder {
+  text-align: center;
+  color: #757575;
+}
+
+.map-placeholder i {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.picker-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.picker-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.picker-item:last-child {
+  border-bottom: none;
+}
+
+.picker-item:hover {
+  background-color: #f5f5f5;
+}
+
+.picker-item-icon {
+  margin-right: 16px;
+  color: #757575;
+}
+
+.picker-item-details {
+  flex: 1;
+}
+
+.picker-item-title {
+  font-weight: 500;
+}
+
+.picker-item-subtitle {
+  font-size: 14px;
+  color: #757575;
 }
 
 .form-actions {
@@ -425,10 +575,27 @@ main {
   font-weight: 500;
 }
 
-.task-reminder {
+.task-reminder,
+.task-location,
+.task-contact {
   display: flex;
   align-items: center;
   color: #4285f4;
+}
+
+.task-location {
+  color: #0f9d58; /* green */
+}
+
+.task-contact {
+  color: #f4b400; /* amber */
+}
+
+.task-calendar-type {
+  font-size: 11px;
+  color: #757575;
+  font-style: italic;
+  margin-top: 4px;
 }
 
 .task-actions {
