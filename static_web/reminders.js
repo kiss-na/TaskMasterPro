@@ -1,4 +1,31 @@
 // Reminder types
+const REMINDER_CATEGORIES = {
+  health: {
+    name: 'Health',
+    icon: 'medical_services',
+    color: '#9c27b0',
+    types: ['medicine', 'vitals', 'menstruation', 'appointment']
+  },
+  habits: {
+    name: 'Habits',
+    icon: 'schedule',
+    color: '#2196f3',
+    types: ['pomodoro', 'water', 'study', 'bedtime']
+  },
+  birthdays: {
+    name: 'Birthdays',
+    icon: 'cake',
+    color: '#e91e63',
+    types: ['birthday']
+  },
+  wellness: {
+    name: 'Mental Wellness',
+    icon: 'spa',
+    color: '#4caf50',
+    types: ['socialization', 'meditation', 'exercise']
+  }
+};
+
 const REMINDER_TYPES = {
   birthday: {
     name: 'Birthday',
