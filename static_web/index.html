@@ -15,15 +15,15 @@
     <header class="app-header">
       <h1>Task Manager</h1>
     </header>
-    
+
     <main id="main-content">
       <!-- Tab content will be inserted here -->
     </main>
-    
+
     <button class="fab" id="fab">
       <i class="material-icons">add</i>
     </button>
-    
+
     <div class="bottom-nav" id="bottom-nav">
       <div class="nav-item active" data-tab="tasks">
         <i class="material-icons nav-icon">check_circle</i>
@@ -47,18 +47,18 @@
       </div>
     </div>
   </div>
-  
+
   <div class="snackbar" id="snackbar"></div>
-  
+
   <!-- Main app script -->
   <script src="app.js"></script>
-  
+
   <!-- Feature scripts -->
   <script src="tasks.js"></script>
   <script src="calendar.js"></script>
   <script src="notes.js"></script>
   <script src="reminders.js"></script>
-  
+
   <!-- Advanced features -->
   <script src="task-intelligence.js"></script>
   <script src="cloud-sync.js"></script>
@@ -66,3 +66,74 @@
   <script src="ai-assistant.js"></script>
 </body>
 </html>
+<div class="tab-content" data-tab="settings">
+  <h2 class="tab-section-title">Settings</h2>
+
+  <div class="settings-section">
+    <h3>Appearance</h3>
+    <div class="settings-option">
+      <div class="settings-label">
+        <span class="settings-name">Dark Mode</span>
+        <span class="settings-description">Enable dark theme</span>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="dark-mode-toggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+
+    <div class="settings-option">
+      <div class="settings-label">
+        <span class="settings-name">Priority Colors</span>
+        <span class="settings-description">Customize task priority colors</span>
+      </div>
+      <div class="priority-color-settings">
+        <div class="color-picker">
+          <label>High Priority</label>
+          <input type="color" id="high-priority-color" value="#e53935">
+        </div>
+        <div class="color-picker">
+          <label>Medium Priority</label>
+          <input type="color" id="medium-priority-color" value="#fb8c00">
+        </div>
+        <div class="color-picker">
+          <label>Low Priority</label>
+          <input type="color" id="low-priority-color" value="#43a047">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>Support</h3>
+    <div class="feedback-form">
+      <h4>Send Feedback</h4>
+      <textarea id="feedback-text" placeholder="Tell us what you think..."></textarea>
+      <button id="send-feedback" class="btn-save">Send Feedback</button>
+    </div>
+
+    <div class="support-links">
+      <a href="#" class="support-link" id="rate-app">
+        <i class="material-icons">star</i>
+        Rate Us
+      </a>
+      <a href="#" class="support-link" id="contact-us">
+        <i class="material-icons">mail</i>
+        Contact Us
+      </a>
+      <a href="#" class="support-link" id="donate">
+        <i class="material-icons">favorite</i>
+        Support Us
+      </a>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>About</h3>
+    <div class="about-content">
+      <p>Task Manager v1.0</p>
+      <p>Developed by Krishna Chapagain, Nepal</p>
+      <p class="copyright">© 2025 Task Manager. All rights reserved.</p>
+    </div>
+  </div>
+</div>
