@@ -75,7 +75,7 @@ function generateCalendarHTML() {
   // Create calendar cells
   let daysHTML = '';
   
-  // If Nepali calendar is selected, show Hamro Patro widget
+  // If Nepali calendar is selected, show Clean Nepali Calendar
   if (calendarState.type === 'nepali') {
     return `
       <div class="calendar-container">
@@ -87,16 +87,7 @@ function generateCalendarHTML() {
             </select>
           </div>
         </div>
-        <div class="nepali-calendar-widget">
-          <iframe src="https://www.hamropatro.com/widgets/calender-small.php" 
-                  frameborder="0" 
-                  scrolling="no" 
-                  marginwidth="0" 
-                  marginheight="0" 
-                  class="nepali-calendar-iframe"
-                  allowtransparency="true">
-          </iframe>
-        </div>
+        <div id="clean-nepali-calendar" class="clean-nepali-calendar"></div>
         <div class="calendar-events">
           <h3 class="events-header">Events for ${formatDate(calendarState.selectedDate)}</h3>
           <div class="events-list" id="events-list">

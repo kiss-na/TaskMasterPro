@@ -659,44 +659,26 @@ main {
   padding: 16px;
 }
 
-.nepali-calendar-widget {
+.clean-nepali-calendar {
   margin: 20px 0;
-  display: flex;
-  justify-content: center;
   background: #fff;
   border-radius: 8px;
-  padding: 10px;
+  padding: 16px;
   width: 100%;
-  min-height: 290px;
-  position: relative;
-}
-
-.nepali-calendar-iframe {
-  border: none;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  min-height: 290px;
-  position: absolute;
-  top: 0;
-  left: 0;
+  min-height: 320px;
 }
 
 @media (max-width: 768px) {
-  .nepali-calendar-widget {
-    min-height: 240px;
-  }
-  .nepali-calendar-iframe {
-    min-height: 240px;
+  .clean-nepali-calendar {
+    padding: 12px;
+    min-height: 280px;
   }
 }
 
 @media (max-width: 480px) {
-  .nepali-calendar-widget {
-    min-height: 200px;
-  }
-  .nepali-calendar-iframe {
-    min-height: 200px;
+  .clean-nepali-calendar {
+    padding: 8px;
+    min-height: 240px;
   }
 }
 
