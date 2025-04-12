@@ -251,7 +251,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         ? Theme.of(context).primaryColor 
                         : isToday 
                             ? Theme.of(context).primaryColor.withOpacity(0.3)
-                            : null,
+                            : _getHighestPriorityColor(gregorianDate),
                     borderRadius: BorderRadius.circular(8),
                     border: isToday && !isSelected
                         ? Border.all(color: Theme.of(context).primaryColor)
@@ -346,3 +346,27 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     }
   }
 }
+Color? _getHighestPriorityColor(DateTime date) {
+    final tasksForDate = _groupedTasks[date] ?? [];
+    if (tasksForDate.isEmpty) return null;
+    
+    // Find highest priority task
+    var highestPriority = TaskPriority.low;
+    for (final task in tasksForDate) {
+      if (task.priority.index > highestPriority.index) {
+        highestPriority = task.priority;
+      }
+    }
+    
+    // Return color based on priority
+    switch (highestPriority) {
+      case TaskPriority.high:
+        return Colors.red[100];
+      case TaskPriority.medium:
+        return Colors.orange[100];
+      case TaskPriority.low:
+        return Colors.green[100];
+      default:
+        return null;
+    }
+  }
