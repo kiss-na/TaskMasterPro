@@ -246,17 +246,14 @@ function showTaskForm(task = null) {
         <div class="modal-body">
           <form id="task-form">
             <div class="form-group">
-              <label for="task-title">Title</label>
-              <input type="text" id="task-title" placeholder="Enter task title" required value="${isEditing ? task.title : ''}">
+              <input type="text" id="task-title" placeholder="Title" required value="${isEditing ? task.title : ''}">
             </div>
             <div class="form-group">
-              <label for="task-description">Description (optional)</label>
-              <textarea id="task-description" placeholder="Enter task description">${isEditing ? task.description : ''}</textarea>
+              <textarea id="task-description" placeholder="Description (optional)">${isEditing ? task.description : ''}</textarea>
             </div>
             
             <!-- Due Date and Time Section -->
             <div class="form-group">
-              <label>Calendar Type</label>
               <select id="task-calendar-type">
                 ${calendarTypeOptions}
               </select>
@@ -264,17 +261,14 @@ function showTaskForm(task = null) {
             
             <div class="form-row">
               <div class="form-group form-group-half">
-                <label for="task-due-date">Due Date</label>
                 <input type="date" id="task-due-date" required value="${isEditing ? task.dueDate : getTodayDate()}">
               </div>
               <div class="form-group form-group-half">
-                <label for="task-due-time">Due Time</label>
-                <input type="time" id="task-due-time" placeholder="Select time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
+                <input type="time" id="task-due-time" placeholder="Due time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
               </div>
             </div>
             
             <div class="form-group">
-              <label>Priority</label>
               <div class="priority-options">
                 <label class="priority-option">
                   <input type="radio" name="priority" value="high" ${isEditing && task.priority === 'high' ? 'checked' : ''}>
@@ -292,61 +286,47 @@ function showTaskForm(task = null) {
               </div>
             </div>
             
-            <!-- Reminder Section (Collapsible) -->
+            <!-- Additional Options (Collapsible) -->
             <div class="collapsible-section">
               <div class="collapsible-header">
-                <label class="checkbox-container">
-                  <input type="checkbox" id="task-reminder" ${isEditing && task.hasReminder ? 'checked' : ''}>
-                  <span class="checkbox-label">Set reminder</span>
-                </label>
-                <i class="material-icons collapsible-icon">expand_more</i>
-              </div>
-              <div class="collapsible-content" id="reminder-details" style="display: ${isEditing && task.hasReminder ? 'block' : 'none'}">
-                <div class="form-row">
-                  <div class="form-group form-group-half">
-                    <label for="task-reminder-time">Reminder Time</label>
-                    <input type="time" id="task-reminder-time" placeholder="Select time" value="${isEditing && task.reminderTime ? task.reminderTime : ''}">
-                  </div>
-                  <div class="form-group form-group-half">
-                    <label for="task-reminder-frequency">Frequency</label>
-                    <select id="task-reminder-frequency">
-                      ${reminderFrequencyOptions}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Contact Section (Collapsible) -->
-            <div class="collapsible-section">
-              <div class="collapsible-header">
-                <label>Contact Information</label>
+                <label>Additional Options</label>
                 <i class="material-icons collapsible-icon">expand_more</i>
               </div>
               <div class="collapsible-content">
+                <!-- Reminder Option -->
                 <div class="form-group">
-                  <label for="task-contact-phone">Phone Number</label>
+                  <label class="checkbox-container">
+                    <input type="checkbox" id="task-reminder" ${isEditing && task.hasReminder ? 'checked' : ''}>
+                    <span class="checkbox-label">Set reminder</span>
+                  </label>
+                </div>
+                <div id="reminder-details" style="display: ${isEditing && task.hasReminder ? 'block' : 'none'}">
+                  <div class="form-row">
+                    <div class="form-group form-group-half">
+                      <input type="time" id="task-reminder-time" placeholder="Reminder time" value="${isEditing && task.reminderTime ? task.reminderTime : ''}">
+                    </div>
+                    <div class="form-group form-group-half">
+                      <select id="task-reminder-frequency">
+                        ${reminderFrequencyOptions}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Contact Field -->
+                <div class="form-group">
                   <div class="input-with-button">
-                    <input type="tel" id="task-contact-phone" placeholder="Enter phone number" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
+                    <input type="tel" id="task-contact-phone" placeholder="Phone number" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
                     <button type="button" class="input-button" id="contact-picker-btn">
                       <i class="material-icons">contact_phone</i>
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-            
-            <!-- Location Section (Collapsible) -->
-            <div class="collapsible-section">
-              <div class="collapsible-header">
-                <label>Location</label>
-                <i class="material-icons collapsible-icon">expand_more</i>
-              </div>
-              <div class="collapsible-content">
+                
+                <!-- Location Field -->
                 <div class="form-group">
-                  <label for="task-location">Place</label>
                   <div class="input-with-button">
-                    <input type="text" id="task-location" placeholder="Enter location" value="${isEditing && task.location ? task.location : ''}">
+                    <input type="text" id="task-location" placeholder="Location" value="${isEditing && task.location ? task.location : ''}">
                     <button type="button" class="input-button" id="location-picker-btn">
                       <i class="material-icons">place</i>
                     </button>
