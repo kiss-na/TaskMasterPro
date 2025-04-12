@@ -761,7 +761,8 @@ main {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: #4285f4;
+  background-color: currentColor;
+  opacity: 0.8;
 }
 
 .calendar-day.selected .event-dot {

@@ -249,31 +249,56 @@ function renderCalendar() {
 
 // Load events from tasks
 function loadEventsFromTasks() {
-  // This function would normally synchronize with tasks data
-  // For this demo, we'll just use some sample events
+  // Get priority colors from task intelligence system
+  const priorityColors = {
+    high: '#e53935',    // red
+    medium: '#fb8c00',  // orange
+    low: '#43a047'      // green
+  };
   
-  calendarState.events = [
-    {
-      id: '1',
-      title: 'Complete project proposal',
-      date: '2025-04-15',
-      color: '#e53935',
-      time: '2:00 PM'
-    },
-    {
-      id: '2',
-      title: 'Buy groceries',
-      date: '2025-04-12',
-      color: '#fb8c00'
-    },
-    {
-      id: '3',
-      title: 'Call mom',
-      date: '2025-04-13',
-      color: '#43a047',
-      time: '6:30 PM'
+  try {
+    // Try to load tasks from localStorage
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      const tasks = JSON.parse(savedTasks);
+      
+      // Convert tasks to events with priority colors
+      calendarState.events = tasks.map(task => ({
+        id: task.id,
+        title: task.title,
+        date: task.dueDate,
+        color: priorityColors[task.priority] || '#757575',
+        time: task.dueTime || ''
+      }));
+    } else {
+      // Fallback sample events
+      calendarState.events = [
+        {
+          id: '1',
+          title: 'Complete project proposal',
+          date: '2025-04-15',
+          color: priorityColors.high,
+          time: '2:00 PM'
+        },
+        {
+          id: '2',
+          title: 'Buy groceries',
+          date: '2025-04-12',
+          color: priorityColors.medium
+        },
+        {
+          id: '3',
+          title: 'Call mom',
+          date: '2025-04-13',
+          color: priorityColors.low,
+          time: '6:30 PM'
+        }
+      ];
     }
-  ];
+  } catch (e) {
+    console.error('Error loading tasks for calendar:', e);
+    calendarState.events = [];
+  }
   
   try {
     // Try to load tasks from localStorage
