@@ -93,7 +93,7 @@ function generateCalendarHTML() {
                   scrolling="no" 
                   marginwidth="0" 
                   marginheight="0" 
-                  class="nepali-calendar-iframe"
+                  style="border:none; overflow:hidden; width:100%; height:290px;" 
                   allowtransparency="true">
           </iframe>
         </div>
