@@ -143,44 +143,75 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   Widget _buildNepaliCalendar() {
     return CleanNepaliCalendar(
       controller: _nepaliCalendarController,
+      language: Language.nepali,
       onDaySelected: (selectedDay) {
         widget.onDateSelected(selectedDay);
       },
-      language: Language.nepali,
-      headerDayBuilder: (context, day) {
-        return Center(
-          child: Text(
-            day,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+      events: widget.tasks?.where((task) => task.dueDate != null).map(
+        (task) => NepaliCalendarEvent(
+          title: task.title,
+          date: task.dueDate!,
+          color: task.color ?? Colors.blue,
+        ),
+      ).toList() ?? [],
+      headerStyle: HeaderStyle(
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).primaryColor,
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      ),
+      dayStyle: DayStyle(
+        holidayTextStyle: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendTextStyle: TextStyle(
+          color: Colors.orange[800],
+        ),
+      ),
+      eventCountBuilder: (count) => Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          count.toString(),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+          ),
+        ),
+      ),
+      onEventDayTap: (events, date) {
+        // Handle event day tap
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Events on ${date.toString()}'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: events.map((event) => ListTile(
+                title: Text(event.title),
+                leading: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: event.color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              )).toList(),
             ),
-          ),
-        );
-      },
-      dayBuilder: (context, date, event, isToday, isSelected) {
-        return Container(
-          margin: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: isSelected 
-                ? Theme.of(context).primaryColor 
-                : isToday 
-                    ? Theme.of(context).primaryColor.withOpacity(0.3)
-                    : null,
-            borderRadius: BorderRadius.circular(5),
-          ),
-          child: Center(
-            child: Text(
-              date.day.toString(),
-              style: TextStyle(
-                color: isSelected 
-                    ? Colors.white 
-                    : isToday 
-                        ? Theme.of(context).primaryColor
-                        : Colors.black87,
-                fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Close'),
               ),
-            ),
+            ],
           ),
         );
       },
