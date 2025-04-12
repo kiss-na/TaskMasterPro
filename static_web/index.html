@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    
+    header {
+      background-color: #4285f4;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .tab-content {
+      text-align: center;
+      max-width: 600px;
+    }
+    
+    .tab-icon {
+      font-size: 72px;
+      margin-bottom: 16px;
+    }
+    
+    .tab-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    
+    .tab-description {
+      margin-bottom: 24px;
+    }
+    
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #4285f4;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      border: none;
+    }
+    
+    .bottom-nav {
+      display: flex;
+      background-color: #fff;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+    
+    .nav-item.active {
+      color: #4285f4;
+    }
+    
+    .nav-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    
+    .nav-label {
+      font-size: 12px;
+    }
+    
+    .snackbar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+    
+    .snackbar.show {
+      opacity: 1;
+    }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>Task Manager</h1>
+    </header>
+    
+    <main id="main-content">
+      <!-- Tab content will be inserted here -->
+    </main>
+    
+    <button class="fab" id="fab">
+      <i class="material-icons">add</i>
+    </button>
+    
+    <div class="bottom-nav" id="bottom-nav">
+      <div class="nav-item active" data-tab="tasks">
+        <i class="material-icons nav-icon">check_circle</i>
+        <span class="nav-label">Tasks</span>
+      </div>
+      <div class="nav-item" data-tab="calendar">
+        <i class="material-icons nav-icon">calendar_today</i>
+        <span class="nav-label">Calendar</span>
+      </div>
+      <div class="nav-item" data-tab="notes">
+        <i class="material-icons nav-icon">note</i>
+        <span class="nav-label">Notes</span>
+      </div>
+      <div class="nav-item" data-tab="reminders">
+        <i class="material-icons nav-icon">alarm</i>
+        <span class="nav-label">Reminders</span>
+      </div>
+      <div class="nav-item" data-tab="settings">
+        <i class="material-icons nav-icon">settings</i>
+        <span class="nav-label">Settings</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="snackbar" id="snackbar"></div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabs = {
+        tasks: {
+          icon: 'check_circle',
+          title: 'Tasks',
+          description: 'Manage your tasks with priorities and reminders',
+          color: '#4285f4' // blue
+        },
+        calendar: {
+          icon: 'calendar_today',
+          title: 'Calendar',
+          description: 'View your tasks in different calendar formats',
+          color: '#0f9d58' // green
+        },
+        notes: {
+          icon: 'note',
+          title: 'Notes',
+          description: 'Create and manage your notes',
+          color: '#f4b400' // amber
+        },
+        reminders: {
+          icon: 'alarm',
+          title: 'Reminders',
+          description: 'Set up different types of reminders',
+          color: '#db4437' // red
+        },
+        settings: {
+          icon: 'settings',
+          title: 'Settings',
+          description: 'Configure app settings and preferences',
+          color: '#757575' // grey
+        }
+      };
+      
+      let currentTab = 'tasks';
+      
+      function updateTabContent(tabName) {
+        const tab = tabs[tabName];
+        const mainContent = document.getElementById('main-content');
+        
+        mainContent.innerHTML = `
+          <div class="tab-content">
+            <i class="material-icons tab-icon" style="color: ${tab.color}">${tab.icon}</i>
+            <div class="tab-title">${tab.title}</div>
+            <div class="tab-description">${tab.description}</div>
+          </div>
+        `;
+      }
+      
+      function updateActiveTab(tabName) {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+          if (item.dataset.tab === tabName) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+      }
+      
+      function showSnackbar(message) {
+        const snackbar = document.getElementById('snackbar');
+        snackbar.textContent = message;
+        snackbar.classList.add('show');
+        
+        setTimeout(() => {
+          snackbar.classList.remove('show');
+        }, 3000);
+      }
+      
+      // Initialize with tasks tab
+      updateTabContent(currentTab);
+      
+      // Handle tab clicks
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', function() {
+          const tabName = this.dataset.tab;
+          currentTab = tabName;
+          updateTabContent(tabName);
+          updateActiveTab(tabName);
+        });
+      });
+      
+      // Handle FAB click
+      const fab = document.getElementById('fab');
+      fab.addEventListener('click', function() {
+        showSnackbar(`Add new item for ${tabs[currentTab].title}`);
+      });
+    });
+  </script>
+</body>
+</html>

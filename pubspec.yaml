@@ -1,0 +1,78 @@
+name: task_manager
+description: A comprehensive task management Android app with multi-calendar support, notes, and reminder features.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State management
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
+  
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  
+  # UI Components
+  table_calendar: ^3.0.9
+  flutter_colorpicker: ^1.0.3
+  flutter_quill: ^7.2.0
+  cached_network_image: ^3.2.3
+  
+  # Utilities
+  intl: ^0.18.1
+  uuid: ^3.0.7
+  nepali_utils: ^3.0.3
+  
+  # Maps & Location
+  google_maps_flutter: ^2.3.0
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  
+  # Contacts
+  contacts_service: ^0.6.3
+  
+  # Notifications
+  flutter_local_notifications: ^14.1.1
+  timezone: ^0.9.2
+  
+  # API Integration
+  googleapis: ^11.2.0
+  googleapis_auth: ^1.4.1
+  url_launcher: ^6.1.11
+  
+  # Permissions
+  permission_handler: ^10.3.0
+  
+  # Package Info
+  package_info_plus: ^4.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  flutter_lints: ^2.0.0
+  build_runner: ^2.3.3
+  hive_generator: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Roboto-Italic.ttf
+          style: italic
