@@ -74,7 +74,51 @@ function generateCalendarHTML() {
 
   // Create calendar cells
   let daysHTML = '';
-  // Add empty cells for days before the first day of the month
+  
+  // If Nepali calendar is selected, show Hamro Patro widget
+  if (calendarState.type === 'nepali') {
+    return `
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <div class="calendar-type-selector">
+            <select id="calendar-type">
+              <option value="gregorian">Gregorian</option>
+              <option value="nepali" selected>Nepali</option>
+            </select>
+          </div>
+        </div>
+        <div class="nepali-calendar-widget">
+          <iframe src="https://www.hamropatro.com/widgets/calender-small.php" 
+                  frameborder="0" 
+                  scrolling="no" 
+                  marginwidth="0" 
+                  marginheight="0" 
+                  style="border:none; overflow:hidden; width:100%; height:290px;" 
+                  allowtransparency="true">
+          </iframe>
+        </div>
+        <div class="calendar-events">
+          <h3 class="events-header">Events for ${formatDate(calendarState.selectedDate)}</h3>
+          <div class="events-list" id="events-list">
+            ${generateEventsHTML(calendarState.selectedDate)}
+          </div>
+          
+          <h3 class="events-header">Upcoming Events</h3>
+          <div class="events-list" id="upcoming-events">
+            ${sortEventsByDate(getUpcomingEvents())
+              .map(event => `
+                <div class="event-item" style="border-left: 4px solid ${event.color}">
+                  <div class="event-time">${formatDate(event.date, event.time)}</div>
+                  <div class="event-title">${event.title}</div>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // For other calendar types, add empty cells for days before the first day of the month
   for (let i = 0; i < firstDayOfWeek; i++) {
     daysHTML += '<div class="calendar-day empty"></div>';
   }

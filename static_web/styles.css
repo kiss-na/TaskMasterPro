@@ -659,6 +659,15 @@ main {
   padding: 16px;
 }
 
+.nepali-calendar-widget {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+}
+
 .calendar-header {
   display: flex;
   justify-content: space-between;
