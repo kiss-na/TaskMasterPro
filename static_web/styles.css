@@ -1378,3 +1378,10 @@ input:checked + .slider:before {
   margin-right: 4px;
   font-size: 16px;
 }
+.note-content.hidden {
+  display: none;
+}
+
+.note-item {
+  cursor: pointer;
+}

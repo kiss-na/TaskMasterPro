@@ -60,13 +60,8 @@ function saveNotes() {
 
 // Generate note item HTML
 function generateNoteHTML(note) {
-  // Format the content for display (limit length)
-  let displayContent = note.content;
-  if (displayContent.length > 150) {
-    displayContent = displayContent.substring(0, 150) + '...';
-  }
-  // Convert newlines to <br> tags
-  displayContent = displayContent.replace(/\n/g, '<br>');
+  // Convert newlines to <br> tags for content
+  const displayContent = note.content.replace(/\n/g, '<br>');
   
   // Format date
   const updatedDate = new Date(note.updatedAt);
@@ -92,7 +87,7 @@ function generateNoteHTML(note) {
           <button class="note-delete-btn"><i class="material-icons">delete</i></button>
         </div>
       </div>
-      <div class="note-content">${displayContent}</div>
+      <div class="note-content hidden">${displayContent}</div>
       <div class="note-footer">
         <div class="note-tags">${tagsHTML}</div>
         <div class="note-date">Updated: ${formattedDate}</div>
@@ -334,3 +329,24 @@ document.addEventListener('DOMContentLoaded', function() {
     loadNotes();
   }
 });
+// Handle note click
+function handleNoteClick(e) {
+  if (!e.target.closest('.note-actions')) {
+    const noteContent = e.currentTarget.querySelector('.note-content');
+    noteContent.classList.toggle('hidden');
+  }
+}
+
+// Add click listeners to notes
+function addNoteClickListeners() {
+  document.querySelectorAll('.note-item').forEach(note => {
+    note.addEventListener('click', handleNoteClick);
+  });
+}
+
+// Update renderNotes to add click listeners
+const originalRenderNotes = renderNotes;
+renderNotes = function(showArchived = false) {
+  originalRenderNotes(showArchived);
+  addNoteClickListeners();
+}
