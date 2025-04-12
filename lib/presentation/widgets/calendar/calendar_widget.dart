@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-import 'package:nepali_utils/nepali_utils.dart';
-import 'package:task_manager/data/models/task.dart';
 import 'package:clean_nepali_calendar/clean_nepali_calendar.dart';
+import 'package:task_manager/data/models/task.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class CalendarWidget extends StatefulWidget {
   final String calendarType;
@@ -23,11 +22,12 @@ class CalendarWidget extends StatefulWidget {
 }
 
 class _CalendarWidgetState extends State<CalendarWidget> {
+  late NepaliCalendarController _nepaliCalendarController;
   late CalendarFormat _calendarFormat;
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   late Map<DateTime, List<Task>> _groupedTasks;
-  late NepaliCalendarController _nepaliCalendarController;
+
 
   @override
   void initState() {
@@ -187,7 +187,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         ),
       ),
       onEventDayTap: (events, date) {
-        // Handle event day tap
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -216,5 +215,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         );
       },
     );
+  }
+  @override 
+  void dispose() {
+    _nepaliCalendarController.dispose();
+    super.dispose();
   }
 }
