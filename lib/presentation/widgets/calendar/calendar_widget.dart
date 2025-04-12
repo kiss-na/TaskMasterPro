@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:nepali_utils/nepali_utils.dart';
 import 'package:task_manager/data/models/task.dart';
 import 'package:task_manager/core/utils/date_utils.dart' as app_date_utils;
+import 'package:clean_nepali_calendar/clean_nepali_calendar.dart'; // Added import
 
 class CalendarWidget extends StatefulWidget {
   final String calendarType;
@@ -27,6 +28,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   late Map<DateTime, List<Task>> _groupedTasks;
+  late NepaliCalendarController _nepaliCalendarController; // Added controller
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     _selectedDay = widget.selectedDate;
     _groupedTasks = {};
     _groupTasks();
+    _nepaliCalendarController = NepaliCalendarController(); // Initialize controller
   }
 
   @override
@@ -54,9 +57,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   void _groupTasks() {
     if (widget.tasks == null) return;
-    
+
     _groupedTasks = {};
-    
+
     for (final task in widget.tasks!) {
       if (task.dueDate != null) {
         final date = DateTime(
@@ -64,11 +67,11 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           task.dueDate!.month,
           task.dueDate!.day,
         );
-        
+
         if (!_groupedTasks.containsKey(date)) {
           _groupedTasks[date] = [];
         }
-        
+
         _groupedTasks[date]!.add(task);
       }
     }
@@ -143,164 +146,29 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   }
 
   Widget _buildNepaliCalendar() {
-    // Convert selected Gregorian date to Nepali date
-    final nepaliDate = NepaliDateTime.fromDateTime(_selectedDay);
-    
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.chevron_left),
-                onPressed: () => _changeNepaliMonth(-1),
-              ),
-              Text(
-                '${_getNepaliMonthName(nepaliDate.month)} ${nepaliDate.year}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.chevron_right),
-                onPressed: () => _changeNepaliMonth(1),
-              ),
-            ],
-          ),
-        ),
-        _buildNepaliCalendarGrid(nepaliDate),
-      ],
-    );
-  }
-
-  Widget _buildNepaliCalendarGrid(NepaliDateTime nepaliDate) {
-    // Get the first day of the month
-    final firstDay = NepaliDateTime(nepaliDate.year, nepaliDate.month, 1);
-    final firstDayWeekday = firstDay.weekday % 7; // 0 for Sunday, 6 for Saturday
-    
-    // Get the number of days in the month
-    final daysInMonth = NepaliDateTime.getDaysInMonth(nepaliDate.year, nepaliDate.month);
-    
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          // Weekday headers
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              'Sun',
-              'Mon',
-              'Tue',
-              'Wed',
-              'Thu',
-              'Fri',
-              'Sat',
-            ].map((day) => Expanded(
-              child: Center(
+    return widget.calendarType == 'nepali'
+        ? CleanNepaliCalendar(
+            controller: _nepaliCalendarController,
+            onDaySelected: (day) {
+              widget.onDateSelected(day);
+            },
+            headerDayBuilder: (_, day) {
+              return Center(
                 child: Text(
                   day,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-            )).toList(),
-          ),
-          const SizedBox(height: 8),
-          // Calendar grid
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              childAspectRatio: 1.0,
-            ),
-            itemCount: firstDayWeekday + daysInMonth,
-            itemBuilder: (context, index) {
-              if (index < firstDayWeekday) {
-                return Container(); // Empty cell for days before the 1st of the month
-              }
-              
-              final dayNumber = index - firstDayWeekday + 1;
-              final nepaliDayDate = NepaliDateTime(nepaliDate.year, nepaliDate.month, dayNumber);
-              final gregorianDate = nepaliDayDate.toDateTime();
-              
-              final isSelected = nepaliDate.day == dayNumber;
-              final isToday = NepaliDateTime.now().year == nepaliDate.year &&
-                              NepaliDateTime.now().month == nepaliDate.month &&
-                              NepaliDateTime.now().day == dayNumber;
-              
-              // Check if there are tasks for this day
-              final hasTask = _hasTaskForDate(gregorianDate);
-              
-              return GestureDetector(
-                onTap: () {
-                  final selectedGregorianDate = nepaliDayDate.toDateTime();
-                  setState(() {
-                    _selectedDay = selectedGregorianDate;
-                    _focusedDay = selectedGregorianDate;
-                  });
-                  widget.onDateSelected(selectedGregorianDate);
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? Theme.of(context).primaryColor 
-                        : isToday 
-                            ? Theme.of(context).primaryColor.withOpacity(0.3)
-                            : _getHighestPriorityColor(gregorianDate),
-                    borderRadius: BorderRadius.circular(8),
-                    border: isToday && !isSelected
-                        ? Border.all(color: Theme.of(context).primaryColor)
-                        : null,
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Text(
-                          dayNumber.toString(),
-                          style: TextStyle(
-                            color: isSelected 
-                                ? Colors.white 
-                                : null,
-                            fontWeight: isSelected || isToday 
-                                ? FontWeight.bold 
-                                : null,
-                          ),
-                        ),
-                      ),
-                      if (hasTask)
-                        Positioned(
-                          bottom: 4,
-                          right: 0,
-                          left: 0,
-                          child: Center(
-                            child: Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: isSelected 
-                                    ? Colors.white 
-                                    : Theme.of(context).colorScheme.secondary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
               );
             },
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
+          )
+        : Column(
+            children: [], // Placeholder, should not reach here based on original code logic.
+          );
   }
+
 
   bool _hasTaskForDate(DateTime date) {
     final normalizedDate = DateTime(date.year, date.month, date.day);
@@ -311,7 +179,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     final currentNepaliDate = NepaliDateTime.fromDateTime(_focusedDay);
     int newMonth = currentNepaliDate.month + delta;
     int newYear = currentNepaliDate.year;
-    
+
     if (newMonth < 1) {
       newMonth = 12;
       newYear--;
@@ -319,10 +187,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       newMonth = 1;
       newYear++;
     }
-    
+
     final newNepaliDate = NepaliDateTime(newYear, newMonth, 1);
     final newGregorianDate = newNepaliDate.toDateTime();
-    
+
     setState(() {
       _focusedDay = newGregorianDate;
     });
@@ -330,26 +198,38 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   String _getNepaliMonthName(int month) {
     switch (month) {
-      case 1: return 'Baishakh';
-      case 2: return 'Jestha';
-      case 3: return 'Ashadh';
-      case 4: return 'Shrawan';
-      case 5: return 'Bhadra';
-      case 6: return 'Ashwin';
-      case 7: return 'Kartik';
-      case 8: return 'Mangsir';
-      case 9: return 'Poush';
-      case 10: return 'Magh';
-      case 11: return 'Falgun';
-      case 12: return 'Chaitra';
-      default: return 'Unknown';
+      case 1:
+        return 'Baishakh';
+      case 2:
+        return 'Jestha';
+      case 3:
+        return 'Ashadh';
+      case 4:
+        return 'Shrawan';
+      case 5:
+        return 'Bhadra';
+      case 6:
+        return 'Ashwin';
+      case 7:
+        return 'Kartik';
+      case 8:
+        return 'Mangsir';
+      case 9:
+        return 'Poush';
+      case 10:
+        return 'Magh';
+      case 11:
+        return 'Falgun';
+      case 12:
+        return 'Chaitra';
+      default:
+        return 'Unknown';
     }
   }
-}
-Color? _getHighestPriorityColor(DateTime date) {
+  Color? _getHighestPriorityColor(DateTime date) {
     final tasksForDate = _groupedTasks[date] ?? [];
     if (tasksForDate.isEmpty) return null;
-    
+
     // Find highest priority task
     var highestPriority = TaskPriority.low;
     for (final task in tasksForDate) {
@@ -357,7 +237,7 @@ Color? _getHighestPriorityColor(DateTime date) {
         highestPriority = task.priority;
       }
     }
-    
+
     // Return color based on priority
     switch (highestPriority) {
       case TaskPriority.high:
@@ -370,3 +250,4 @@ Color? _getHighestPriorityColor(DateTime date) {
         return null;
     }
   }
+}
