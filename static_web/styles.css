@@ -1173,7 +1173,7 @@ input:checked + .slider:before {
   .notes-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-  
+
   .fab {
     bottom: 70px;
   }
@@ -1183,15 +1183,15 @@ input:checked + .slider:before {
   .calendar-grid {
     gap: 4px;
   }
-  
+
   .event-indicators {
     display: none;
   }
-  
+
   .notes-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .reminder-details {
     flex-direction: column;
     gap: 8px;

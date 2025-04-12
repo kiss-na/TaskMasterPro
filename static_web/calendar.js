@@ -386,6 +386,11 @@ function showEventForm() {
   `;
 
   document.body.appendChild(modal);
+  
+  // Activate modal with animation
+  requestAnimationFrame(() => {
+    modal.classList.add('active');
+  });
 
   // Event handlers
   const form = modal.querySelector('#event-form');
