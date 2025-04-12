@@ -101,8 +101,26 @@ function generateTaskHTML(task) {
     additionalInfo += `<span class="task-email" title="${task.contactEmail}"><i class="material-icons">email</i></span>`;
   }
   
+  // Get category information if available
+  let categoryIcon = '';
+  if (window.TaskIntelligence && task.category) {
+    const categoryData = window.TaskIntelligence.categories[task.category] || window.TaskIntelligence.categories.other;
+    categoryIcon = `<span class="task-category-icon" title="${categoryData.name}"><i class="material-icons">${categoryData.icon}</i></span>`;
+  }
+  
+  // Display tags if available
+  let tagsHTML = '';
+  if (task.tags && task.tags.length > 0) {
+    tagsHTML = `
+      <div class="task-tags">
+        ${task.tags.slice(0, 3).map(tag => `<span class="task-tag">${tag}</span>`).join('')}
+        ${task.tags.length > 3 ? `<span class="task-tag-more">+${task.tags.length - 3}</span>` : ''}
+      </div>
+    `;
+  }
+  
   return `
-    <div class="task-item" data-id="${task.id}" style="border-left: 4px solid ${task.color}">
+    <div class="task-item" data-id="${task.id}" data-category="${task.category || 'other'}" style="border-left: 4px solid ${task.color}">
       <div class="task-checkbox-container">
         <input type="checkbox" id="task-${task.id}" class="task-checkbox" ${task.isCompleted ? 'checked' : ''}>
         <label for="task-${task.id}" class="task-checkbox-label"></label>
@@ -117,7 +135,9 @@ function generateTaskHTML(task) {
         </div>
         ${task.calendarType && task.calendarType !== 'gregorian' ? 
           `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
+        ${tagsHTML}
       </div>
+      ${categoryIcon}
       <div class="task-actions">
         <button class="task-edit-btn"><i class="material-icons">edit</i></button>
         <button class="task-delete-btn"><i class="material-icons">delete</i></button>
@@ -367,10 +387,24 @@ function showTaskForm(task = null) {
   modalContainer.innerHTML = modalHTML;
   document.body.appendChild(modalContainer);
   
+  // Store task data for intelligence system
+  const form = document.getElementById('task-form');
+  if (form && task) {
+    form._taskData = task;
+  }
+  
   // Add event listeners
   document.querySelector('.modal-close-btn').addEventListener('click', closeTaskForm);
   document.querySelector('.btn-cancel').addEventListener('click', closeTaskForm);
   document.getElementById('task-form').addEventListener('submit', saveTaskForm);
+  
+  // Dispatch event for task intelligence system
+  document.dispatchEvent(new CustomEvent('taskFormShown', {
+    detail: {
+      form: document.getElementById('task-form'),
+      isEditing: isEditing
+    }
+  }));
   
   // Collapsible sections
   document.querySelectorAll('.collapsible-header').forEach(header => {
@@ -641,10 +675,17 @@ function saveTaskForm(e) {
   const contactEmail = form.querySelector('#task-contact-email')?.value || '';
   const location = form.querySelector('#task-location')?.value || '';
   
+  // Intelligence fields - may not exist if TaskIntelligence is not loaded
+  const category = form.querySelector('#task-category')?.value || 'other';
+  const tagsInput = form.querySelector('#task-tags')?.value || '';
+  const tags = tagsInput ? tagsInput.split(',').filter(tag => tag.trim()) : [];
+  
   if (!title) {
     alert('Please enter a task title');
     return;
   }
+  
+  let updatedTask;
   
   if (taskId) {
     // Update existing task
@@ -672,6 +713,11 @@ function saveTaskForm(e) {
       task.contactEmail = contactEmail;
       task.location = location;
       
+      // Intelligence fields
+      task.category = category;
+      task.tags = tags;
+      
+      updatedTask = task;
       showSnackbar('Task updated');
     }
   } else {
@@ -691,15 +737,28 @@ function saveTaskForm(e) {
       reminderFrequency: hasReminder ? reminderFrequency : 'once',
       contactPhone,
       contactEmail,
-      location
+      location,
+      category,
+      tags
     };
     tasks.push(newTask);
+    updatedTask = newTask;
     showSnackbar('Task added');
   }
   
   saveTasks();
   renderTasks();
   closeTaskForm();
+  
+  // Dispatch event for task intelligence system
+  if (updatedTask) {
+    document.dispatchEvent(new CustomEvent('taskSaved', {
+      detail: {
+        task: updatedTask,
+        isNew: !taskId
+      }
+    }));
+  }
 }
 
 // Initialize tasks
