@@ -158,16 +158,16 @@ function generateTaskHTML(task) {
       </div>
       <div class="task-content ${task.isCompleted ? 'completed' : ''}">
         <div class="task-title">${task.title}</div>
-        <div class="task-details">
+        <div class="task-details hidden">
           <span class="task-due-date">${formatDate(task.dueDate, task.dueTime)}</span>
           <span class="task-priority" style="background-color: ${task.color}">${PRIORITY_LEVELS[task.priority].name}</span>
           ${task.hasReminder ? '<span class="task-reminder"><i class="material-icons">alarm</i></span>' : ''}
           ${additionalInfo}
+          ${task.calendarType && task.calendarType !== 'gregorian' ? 
+            `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
+          ${tagsHTML}
+          ${subtasksHTML}
         </div>
-        ${task.calendarType && task.calendarType !== 'gregorian' ? 
-          `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
-        ${tagsHTML}
-        ${subtasksHTML}
       </div>
       ${categoryIcon}
       <div class="task-actions">
@@ -245,6 +245,7 @@ function renderTasks() {
   
   // Add double-click event listener to task items for quick subtask creation
   document.querySelectorAll('.task-item').forEach(taskItem => {
+    taskItem.addEventListener('click', handleTaskClick);
     taskItem.addEventListener('dblclick', handleTaskDoubleClick);
   });
 }
@@ -859,6 +860,16 @@ function handleAddSubtask(e) {
 }
 
 // Handle double-click on task to quickly add subtasks
+// Handle task click to expand/collapse details
+function handleTaskClick(e) {
+  if (!e.target.closest('.task-actions') && 
+      !e.target.closest('.task-checkbox-container') &&
+      !e.target.closest('.subtasks-container')) {
+    const details = e.currentTarget.querySelector('.task-details');
+    details.classList.toggle('hidden');
+  }
+}
+
 function handleTaskDoubleClick(e) {
   // Skip if clicking on buttons, checkboxes, or subtasks
   if (e.target.closest('.task-actions') || 
