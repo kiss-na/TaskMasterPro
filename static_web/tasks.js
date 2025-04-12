@@ -97,7 +97,7 @@ function generateTaskHTML(task) {
   const hasLocation = task.location && task.location.trim() !== '';
   const hasPhone = task.contactPhone && task.contactPhone.trim() !== '';
   const hasEmail = task.contactEmail && task.contactEmail.trim() !== '';
-  
+
   let additionalInfo = '';
   if (hasLocation) {
     additionalInfo += `<span class="task-location" title="${task.location}"><i class="material-icons">place</i></span>`;
@@ -108,14 +108,14 @@ function generateTaskHTML(task) {
   if (hasEmail) {
     additionalInfo += `<span class="task-email" title="${task.contactEmail}"><i class="material-icons">email</i></span>`;
   }
-  
+
   // Get category information if available
   let categoryIcon = '';
   if (window.TaskIntelligence && task.category) {
     const categoryData = window.TaskIntelligence.categories[task.category] || window.TaskIntelligence.categories.other;
     categoryIcon = `<span class="task-category-icon" title="${categoryData.name}"><i class="material-icons">${categoryData.icon}</i></span>`;
   }
-  
+
   // Display tags if available
   let tagsHTML = '';
   if (task.tags && task.tags.length > 0) {
@@ -126,7 +126,7 @@ function generateTaskHTML(task) {
       </div>
     `;
   }
-  
+
   // Generate subtasks HTML if available
   let subtasksHTML = '';
   if (task.subtasks && task.subtasks.length > 0) {
@@ -139,9 +139,9 @@ function generateTaskHTML(task) {
         <div class="subtask-title">${subtask.title}</div>
       </div>
     `).join('');
-    
+
     subtasksHTML = `
-      <div class="subtasks-container">
+      <div class="subtasks-container hidden">
         ${subtasksList}
         <button class="add-subtask-btn" data-parent-id="${task.id}">
           <i class="material-icons">add</i> Add subtask
@@ -149,7 +149,7 @@ function generateTaskHTML(task) {
       </div>
     `;
   }
-  
+
   return `
     <div class="task-item" data-id="${task.id}" data-category="${task.category || 'other'}" style="border-color: ${task.color}">
       <div class="task-checkbox-container">
@@ -163,11 +163,11 @@ function generateTaskHTML(task) {
           <span class="task-priority" style="background-color: ${task.color}">${PRIORITY_LEVELS[task.priority].name}</span>
           ${task.hasReminder ? '<span class="task-reminder"><i class="material-icons">alarm</i></span>' : ''}
           ${additionalInfo}
-          ${task.calendarType && task.calendarType !== 'gregorian' ? 
-            `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
-          ${tagsHTML}
-          ${subtasksHTML}
         </div>
+        ${task.calendarType && task.calendarType !== 'gregorian' ? 
+          `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
+        ${tagsHTML}
+        ${subtasksHTML}
       </div>
       ${categoryIcon}
       <div class="task-actions">
@@ -182,7 +182,7 @@ function generateTaskHTML(task) {
 function formatDate(dateStr, timeStr) {
   const date = new Date(dateStr);
   const dateText = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  
+
   if (timeStr) {
     // Convert 24h time to 12h format
     let [hours, minutes] = timeStr.split(':');
@@ -191,7 +191,7 @@ function formatDate(dateStr, timeStr) {
     const timeText = `${hours}:${minutes} ${ampm}`;
     return `${dateText}, ${timeText}`;
   }
-  
+
   return dateText;
 }
 
@@ -199,54 +199,56 @@ function formatDate(dateStr, timeStr) {
 function renderTasks() {
   const taskList = document.getElementById('task-list');
   if (!taskList) return;
-  
+
   // Sort tasks: incomplete first, then by priority, then by due date
   const sortedTasks = [...tasks].sort((a, b) => {
     // Completed tasks go to the bottom
     if (a.isCompleted !== b.isCompleted) {
       return a.isCompleted ? 1 : -1;
     }
-    
+
     // Sort by priority
     const priorityOrder = { high: 0, medium: 1, low: 2 };
     if (a.priority !== b.priority) {
       return priorityOrder[a.priority] - priorityOrder[b.priority];
     }
-    
+
     // Sort by due date
     return new Date(a.dueDate) - new Date(b.dueDate);
   });
-  
+
   taskList.innerHTML = sortedTasks.length > 0 
     ? sortedTasks.map(generateTaskHTML).join('') 
     : '<div class="empty-state">No tasks. Click the + button to add one.</div>';
-  
+
   // Add event listeners
   document.querySelectorAll('.task-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', handleTaskStatusChange);
   });
-  
+
   document.querySelectorAll('.task-edit-btn').forEach(btn => {
     btn.addEventListener('click', handleTaskEdit);
   });
-  
+
   document.querySelectorAll('.task-delete-btn').forEach(btn => {
     btn.addEventListener('click', handleTaskDelete);
   });
-  
+
   // Add event listeners for subtasks
   document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
     checkbox.addEventListener('change', handleSubtaskStatusChange);
   });
-  
+
   document.querySelectorAll('.add-subtask-btn').forEach(btn => {
     btn.addEventListener('click', handleAddSubtask);
   });
-  
+
   // Add double-click event listener to task items for quick subtask creation
   document.querySelectorAll('.task-item').forEach(taskItem => {
-    taskItem.addEventListener('click', handleTaskClick);
     taskItem.addEventListener('dblclick', handleTaskDoubleClick);
+  });
+  document.querySelectorAll('.task-item').forEach(taskItem => {
+    taskItem.addEventListener('click', handleTaskClick);
   });
 }
 
@@ -291,7 +293,7 @@ function handleTaskDelete(e) {
 function showTaskForm(task = null) {
   const isEditing = !!task;
   const formTitle = isEditing ? 'Edit Task' : 'New Task';
-  
+
   // Calendar types from the calendar module
   const calendarTypeOptions = `
     <option value="gregorian" ${isEditing && task?.calendarType === 'gregorian' ? 'selected' : ''}>Gregorian</option>
@@ -299,7 +301,7 @@ function showTaskForm(task = null) {
     <option value="chinese" ${isEditing && task?.calendarType === 'chinese' ? 'selected' : ''}>Chinese</option>
     <option value="islamic" ${isEditing && task?.calendarType === 'islamic' ? 'selected' : ''}>Islamic</option>
   `;
-  
+
   // Reminder frequency options
   const reminderFrequencyOptions = `
     <option value="once" ${isEditing && task?.reminderFrequency === 'once' ? 'selected' : ''}>Once</option>
@@ -309,7 +311,7 @@ function showTaskForm(task = null) {
     <option value="yearly" ${isEditing && task?.reminderFrequency === 'yearly' ? 'selected' : ''}>Yearly</option>
     <option value="custom" ${isEditing && task?.reminderFrequency === 'custom' ? 'selected' : ''}>Custom</option>
   `;
-  
+
   const modalHTML = `
     <div class="modal-overlay" id="task-modal">
       <div class="modal-content">
@@ -325,14 +327,14 @@ function showTaskForm(task = null) {
             <div class="form-group">
               <textarea id="task-description" placeholder="Description (optional)">${isEditing ? task.description : ''}</textarea>
             </div>
-            
+
             <!-- Due Date and Time Section -->
             <div class="form-group">
               <select id="task-calendar-type">
                 ${calendarTypeOptions}
               </select>
             </div>
-            
+
             <div class="form-row">
               <div class="form-group form-group-half">
                 <input type="date" id="task-due-date" required value="${isEditing ? task.dueDate : getTodayDate()}">
@@ -341,7 +343,7 @@ function showTaskForm(task = null) {
                 <input type="time" id="task-due-time" placeholder="Due time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
               </div>
             </div>
-            
+
             <div class="form-group">
               <div class="priority-options">
                 <label class="priority-option">
@@ -358,7 +360,7 @@ function showTaskForm(task = null) {
                 </label>
               </div>
             </div>
-            
+
             <!-- Additional Options (Collapsible) -->
             <div class="collapsible-section">
               <div class="collapsible-header">
@@ -385,7 +387,7 @@ function showTaskForm(task = null) {
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Contact Fields -->
                 <div class="form-group">
                   <div class="input-with-button">
@@ -395,7 +397,7 @@ function showTaskForm(task = null) {
                     </button>
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <div class="input-with-button">
                     <input type="email" id="task-contact-email" placeholder="Email address" value="${isEditing && task.contactEmail ? task.contactEmail : ''}">
@@ -404,7 +406,7 @@ function showTaskForm(task = null) {
                     </button>
                   </div>
                 </div>
-                
+
                 <!-- Location Field -->
                 <div class="form-group">
                   <div class="input-with-button">
@@ -416,7 +418,7 @@ function showTaskForm(task = null) {
                 </div>
               </div>
             </div>
-            
+
             <div class="form-actions">
               ${isEditing ? '<input type="hidden" id="task-id" value="' + task.id + '">' : ''}
               <button type="button" class="btn-cancel">Cancel</button>
@@ -427,23 +429,23 @@ function showTaskForm(task = null) {
       </div>
     </div>
   `;
-  
+
   // Add modal to body
   const modalContainer = document.createElement('div');
   modalContainer.innerHTML = modalHTML;
   document.body.appendChild(modalContainer);
-  
+
   // Store task data for intelligence system
   const form = document.getElementById('task-form');
   if (form && task) {
     form._taskData = task;
   }
-  
+
   // Add event listeners
   document.querySelector('.modal-close-btn').addEventListener('click', closeTaskForm);
   document.querySelector('.btn-cancel').addEventListener('click', closeTaskForm);
   document.getElementById('task-form').addEventListener('submit', saveTaskForm);
-  
+
   // Dispatch event for task intelligence system
   document.dispatchEvent(new CustomEvent('taskFormShown', {
     detail: {
@@ -451,49 +453,49 @@ function showTaskForm(task = null) {
       isEditing: isEditing
     }
   }));
-  
+
   // Collapsible sections
   document.querySelectorAll('.collapsible-header').forEach(header => {
     header.addEventListener('click', (e) => {
       // Don't toggle if clicking the checkbox itself
       if (e.target.type === 'checkbox') return;
-      
+
       const content = header.nextElementSibling;
       const icon = header.querySelector('.collapsible-icon');
       const isVisible = content.style.display !== 'none';
-      
+
       content.style.display = isVisible ? 'none' : 'block';
       icon.textContent = isVisible ? 'expand_more' : 'expand_less';
     });
   });
-  
+
   // Special handling for reminder checkbox
   const reminderCheckbox = document.getElementById('task-reminder');
   reminderCheckbox.addEventListener('change', function() {
     const reminderDetails = document.getElementById('reminder-details');
     reminderDetails.style.display = this.checked ? 'block' : 'none';
   });
-  
+
   // Contact picker buttons
   document.getElementById('contact-picker-btn').addEventListener('click', function() {
     // In a real implementation, this would open the device contacts
     // For now, we'll show a simulated contact picker
     showContactPicker();
   });
-  
+
   document.getElementById('email-picker-btn').addEventListener('click', function() {
     // In a real implementation, this would open the Google contacts
     // For now, we'll show a simulated contact picker
     showContactPicker();
   });
-  
+
   // Location picker button
   document.getElementById('location-picker-btn').addEventListener('click', function() {
     // In a real implementation, this would open the Google Maps integration
     // For now, we'll show a simulated location picker
     showLocationPicker();
   });
-  
+
   // Show modal with animation
   setTimeout(() => {
     document.getElementById('task-modal').classList.add('active');
@@ -508,12 +510,12 @@ function showContactPicker() {
     { name: 'Alice Johnson', phone: '+15552223333', email: 'alice@example.com' },
     { name: 'Bob Brown', phone: '+15554445555', email: 'bob.brown@gmail.com' }
   ];
-  
+
   // Determine if this is being called for phone or email
   const sourceButtonId = document.activeElement.id;
   const forEmail = sourceButtonId === 'email-picker-btn';
   const title = forEmail ? 'Select Email Contact' : 'Select Phone Contact';
-  
+
   const pickerHTML = `
     <div class="modal-overlay" id="contact-picker-modal">
       <div class="modal-content picker-content">
@@ -550,39 +552,39 @@ function showContactPicker() {
       </div>
     </div>
   `;
-  
+
   // Add picker to body
   const pickerContainer = document.createElement('div');
   pickerContainer.innerHTML = pickerHTML;
   document.body.appendChild(pickerContainer);
-  
+
   // Add event listeners
   document.querySelector('#contact-picker-modal .modal-close-btn').addEventListener('click', function() {
     document.getElementById('contact-picker-modal').remove();
   });
-  
+
   document.querySelectorAll('#contact-picker-modal .picker-item').forEach(item => {
     item.addEventListener('click', function() {
       const phoneNumber = this.dataset.phone;
       const email = this.dataset.email;
-      
+
       if (forEmail) {
         document.getElementById('task-contact-email').value = email;
       } else {
         document.getElementById('task-contact-phone').value = phoneNumber;
       }
-      
+
       document.getElementById('contact-picker-modal').remove();
     });
   });
-  
+
   // Tab switching
   document.querySelectorAll('.picker-tab').forEach(tab => {
     tab.addEventListener('click', function() {
       const type = this.dataset.type;
       document.querySelectorAll('.picker-tab').forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-      
+
       // Update the contact list to show emails or phones
       document.querySelectorAll('.picker-item').forEach(item => {
         const subtitle = item.querySelector('.picker-item-subtitle');
@@ -590,17 +592,17 @@ function showContactPicker() {
       });
     });
   });
-  
+
   // Google connect button (simulated)
   document.querySelector('.google-connect-btn').addEventListener('click', function() {
     showSnackbar('Google Contacts integration would be implemented here');
   });
-  
+
   // Show the search functionality (simulated)
   document.querySelector('.picker-search-input').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
     const isEmailTab = document.querySelector('.picker-tab[data-type="email"]').classList.contains('active');
-    
+
     document.querySelectorAll('.picker-item').forEach(item => {
       const name = item.querySelector('.picker-item-title').textContent.toLowerCase();
       const contactValue = isEmailTab ? item.dataset.email.toLowerCase() : item.dataset.phone.toLowerCase();
@@ -618,7 +620,7 @@ function showLocationPicker() {
     { name: 'Gym', address: 'FitLife Center, 789 Health Blvd' },
     { name: 'Supermarket', address: 'GreenMart, 321 Shopping Ln' }
   ];
-  
+
   const pickerHTML = `
     <div class="modal-overlay" id="location-picker-modal">
       <div class="modal-content picker-content">
@@ -651,17 +653,17 @@ function showLocationPicker() {
       </div>
     </div>
   `;
-  
+
   // Add picker to body
   const pickerContainer = document.createElement('div');
   pickerContainer.innerHTML = pickerHTML;
   document.body.appendChild(pickerContainer);
-  
+
   // Add event listeners
   document.querySelector('#location-picker-modal .modal-close-btn').addEventListener('click', function() {
     document.getElementById('location-picker-modal').remove();
   });
-  
+
   document.querySelectorAll('#location-picker-modal .picker-item').forEach(item => {
     item.addEventListener('click', function() {
       const location = this.dataset.value;
@@ -669,7 +671,7 @@ function showLocationPicker() {
       document.getElementById('location-picker-modal').remove();
     });
   });
-  
+
   // Show the search functionality (simulated)
   document.querySelector('.picker-search-input').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
@@ -703,7 +705,7 @@ function closeTaskForm() {
 // Save task form
 function saveTaskForm(e) {
   e.preventDefault();
-  
+
   const form = document.getElementById('task-form');
   const taskId = form.querySelector('#task-id')?.value;
   const title = form.querySelector('#task-title').value.trim();
@@ -713,26 +715,26 @@ function saveTaskForm(e) {
   const calendarType = form.querySelector('#task-calendar-type').value;
   const priority = form.querySelector('input[name="priority"]:checked')?.value || DEFAULT_TASK_PRIORITY;
   const hasReminder = form.querySelector('#task-reminder').checked;
-  
+
   // Additional fields
   const reminderTime = form.querySelector('#task-reminder-time')?.value || '';
   const reminderFrequency = form.querySelector('#task-reminder-frequency')?.value || 'once';
   const contactPhone = form.querySelector('#task-contact-phone')?.value || '';
   const contactEmail = form.querySelector('#task-contact-email')?.value || '';
   const location = form.querySelector('#task-location')?.value || '';
-  
+
   // Intelligence fields - may not exist if TaskIntelligence is not loaded
   const category = form.querySelector('#task-category')?.value || 'other';
   const tagsInput = form.querySelector('#task-tags')?.value || '';
   const tags = tagsInput ? tagsInput.split(',').filter(tag => tag.trim()) : [];
-  
+
   if (!title) {
     alert('Please enter a task title');
     return;
   }
-  
+
   let updatedTask;
-  
+
   if (taskId) {
     // Update existing task
     const task = tasks.find(t => t.id === taskId);
@@ -745,7 +747,7 @@ function saveTaskForm(e) {
       task.priority = priority;
       task.color = PRIORITY_LEVELS[priority].color;
       task.hasReminder = hasReminder;
-      
+
       // Update additional fields
       if (hasReminder) {
         task.reminderTime = reminderTime;
@@ -754,15 +756,15 @@ function saveTaskForm(e) {
         task.reminderTime = '';
         task.reminderFrequency = 'once';
       }
-      
+
       task.contactPhone = contactPhone;
       task.contactEmail = contactEmail;
       task.location = location;
-      
+
       // Intelligence fields
       task.category = category;
       task.tags = tags;
-      
+
       updatedTask = task;
       showSnackbar('Task updated');
     }
@@ -791,11 +793,11 @@ function saveTaskForm(e) {
     updatedTask = newTask;
     showSnackbar('Task added');
   }
-  
+
   saveTasks();
   renderTasks();
   closeTaskForm();
-  
+
   // Dispatch event for task intelligence system
   if (updatedTask) {
     document.dispatchEvent(new CustomEvent('taskSaved', {
@@ -807,35 +809,11 @@ function saveTaskForm(e) {
   }
 }
 
-// Initialize tasks
-document.addEventListener('DOMContentLoaded', function() {
-  const tasksTab = document.querySelector('.tab-content[data-tab="tasks"]');
-  if (tasksTab) {
-    tasksTab.innerHTML = `
-      <div class="task-header">
-        <h2 class="tab-section-title">My Tasks</h2>
-        <div class="task-filter">
-          <label for="task-filter" class="visually-hidden">Filter</label>
-          <select id="task-filter">
-            <option value="all">All Tasks</option>
-            <option value="today">Due Today</option>
-            <option value="upcoming">Upcoming</option>
-            <option value="completed">Completed</option>
-          </select>
-        </div>
-      </div>
-      <div id="task-list" class="task-list"></div>
-    `;
-    
-    loadTasks();
-  }
-});
-
 // Handle subtask status change
 function handleSubtaskStatusChange(e) {
   const subtaskId = e.target.closest('.subtask-item').dataset.id;
   const taskId = subtaskId.split('-')[0]; // Get parent task ID from subtask ID
-  
+
   const task = tasks.find(t => t.id === taskId);
   if (task && task.subtasks) {
     const subtask = task.subtasks.find(st => st.id === subtaskId);
@@ -850,26 +828,16 @@ function handleSubtaskStatusChange(e) {
 // Handle add subtask button click
 function handleAddSubtask(e) {
   e.stopPropagation(); // Prevent event from bubbling up
-  
+
   const taskId = e.target.closest('.add-subtask-btn').dataset.parentId;
   const task = tasks.find(t => t.id === taskId);
-  
+
   if (task) {
     showSubtaskForm(task);
   }
 }
 
 // Handle double-click on task to quickly add subtasks
-// Handle task click to expand/collapse details
-function handleTaskClick(e) {
-  if (!e.target.closest('.task-actions') && 
-      !e.target.closest('.task-checkbox-container') &&
-      !e.target.closest('.subtasks-container')) {
-    const details = e.currentTarget.querySelector('.task-details');
-    details.classList.toggle('hidden');
-  }
-}
-
 function handleTaskDoubleClick(e) {
   // Skip if clicking on buttons, checkboxes, or subtasks
   if (e.target.closest('.task-actions') || 
@@ -877,10 +845,10 @@ function handleTaskDoubleClick(e) {
       e.target.closest('.subtasks-container')) {
     return;
   }
-  
+
   const taskId = e.currentTarget.dataset.id;
   const task = tasks.find(t => t.id === taskId);
-  
+
   if (task) {
     showSubtaskForm(task);
   }
@@ -913,17 +881,17 @@ function showSubtaskForm(parentTask) {
       </div>
     </div>
   `;
-  
+
   // Add modal to body
   const modalContainer = document.createElement('div');
   modalContainer.innerHTML = modalHTML;
   document.body.appendChild(modalContainer);
-  
+
   // Add event listeners
   document.querySelector('#subtask-modal .modal-close-btn').addEventListener('click', closeSubtaskForm);
   document.querySelector('#subtask-modal .btn-cancel').addEventListener('click', closeSubtaskForm);
   document.getElementById('subtask-form').addEventListener('submit', saveSubtaskForm);
-  
+
   // Show modal with animation
   setTimeout(() => {
     document.getElementById('subtask-modal').classList.add('active');
@@ -943,32 +911,67 @@ function closeSubtaskForm() {
 // Save subtask form
 function saveSubtaskForm(e) {
   e.preventDefault();
-  
+
   const parentTaskId = document.getElementById('parent-task-id').value;
   const subtaskTitle = document.getElementById('subtask-title').value.trim();
-  
+
   if (!subtaskTitle) return;
-  
+
   const parentTask = tasks.find(t => t.id === parentTaskId);
   if (parentTask) {
     // Initialize subtasks array if it doesn't exist
     if (!parentTask.subtasks) {
       parentTask.subtasks = [];
     }
-    
+
     // Generate a new subtask ID by combining parent ID with a unique ID
     const subtaskId = `${parentTaskId}-${Date.now().toString().slice(-4)}`;
-    
+
     // Add the new subtask
     parentTask.subtasks.push({
       id: subtaskId,
       title: subtaskTitle,
       isCompleted: false
     });
-    
+
     saveTasks();
     renderTasks();
     closeSubtaskForm();
     showSnackbar('Subtask added');
   }
 }
+
+// Handle task click to expand/collapse details
+function handleTaskClick(e) {
+  if (!e.target.closest('.task-actions') && 
+      !e.target.closest('.task-checkbox-container')) {
+    const details = e.target.closest('.task-item').querySelector('.task-details');
+    const subtasks = e.target.closest('.task-item').querySelector('.subtasks-container');
+    if (details) details.classList.toggle('hidden');
+    if (subtasks) subtasks.classList.toggle('hidden');
+  }
+}
+
+// Initialize tasks
+document.addEventListener('DOMContentLoaded', function() {
+  const tasksTab = document.querySelector('.tab-content[data-tab="tasks"]');
+  if (tasksTab) {
+    tasksTab.innerHTML = `
+      <div class="task-header">
+        <h2 class="tab-section-title">My Tasks</h2>
+        <div class="task-filter">
+          <label for="task-filter" class="visually-hidden">Filter</label>
+          <select id="task-filter">
+            <option value="all">All Tasks</option>
+            <option value="today">Due Today</option>
+            <option value="upcoming">Upcoming</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+      </div>
+      <div id="task-list" class="task-list"></div>
+    `;
+
+    loadTasks();
+  }
+});

@@ -1378,10 +1378,13 @@ input:checked + .slider:before {
   margin-right: 4px;
   font-size: 16px;
 }
-.note-content.hidden {
+.note-content.hidden,
+.task-details.hidden,
+.subtasks-container.hidden {
   display: none;
 }
 
-.note-item {
+.note-item,
+.task-item {
   cursor: pointer;
 }
