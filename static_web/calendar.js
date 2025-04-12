@@ -335,8 +335,102 @@ document.addEventListener('DOMContentLoaded', function() {
   renderCalendar();
 });
 
-// Placeholder function for event form
+// Show event creation form
 function showEventForm() {
-  // Implement event form functionality here
-  alert("Event form not yet implemented");
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay active';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Event</h2>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="event-form">
+          <div class="form-group">
+            <label for="event-title">Title</label>
+            <input type="text" id="event-title" required>
+          </div>
+          <div class="form-group">
+            <label for="event-date">Date</label>
+            <input type="date" id="event-date" required>
+          </div>
+          <div class="form-group">
+            <label for="event-time">Time</label>
+            <input type="time" id="event-time">
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <div class="priority-options">
+              <label class="priority-option">
+                <input type="radio" name="priority" value="high">
+                <span class="priority-label" style="background-color: #e53935">High</span>
+              </label>
+              <label class="priority-option">
+                <input type="radio" name="priority" value="medium" checked>
+                <span class="priority-label" style="background-color: #fb8c00">Medium</span>
+              </label>
+              <label class="priority-option">
+                <input type="radio" name="priority" value="low">
+                <span class="priority-label" style="background-color: #43a047">Low</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-save">Save Event</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Event handlers
+  const form = modal.querySelector('#event-form');
+  const closeBtn = modal.querySelector('.modal-close-btn');
+  const cancelBtn = modal.querySelector('.btn-cancel');
+
+  closeBtn.addEventListener('click', () => modal.remove());
+  cancelBtn.addEventListener('click', () => modal.remove());
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const title = form.querySelector('#event-title').value;
+    const date = form.querySelector('#event-date').value;
+    const time = form.querySelector('#event-time').value;
+    const priority = form.querySelector('input[name="priority"]:checked').value;
+
+    // Get existing tasks/events
+    let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    
+    // Create new event
+    const newEvent = {
+      id: Date.now().toString(),
+      title: title,
+      dueDate: date,
+      dueTime: time,
+      priority: priority,
+      completed: false,
+      isEvent: true
+    };
+    
+    // Add to tasks array
+    tasks.push(newEvent);
+    
+    // Save back to localStorage
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    
+    // Refresh calendar
+    loadEventsFromTasks();
+    renderCalendar();
+    
+    // Close modal
+    modal.remove();
+  });
 }
