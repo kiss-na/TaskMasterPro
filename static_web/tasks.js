@@ -14,6 +14,9 @@ const PRIORITY_LEVELS = {
   }
 };
 
+// Default priority for new tasks
+const DEFAULT_TASK_PRIORITY = 'low';
+
 // Sample tasks
 let tasks = [
   {
@@ -31,7 +34,12 @@ let tasks = [
     reminderFrequency: 'once',
     contactPhone: '',
     contactEmail: 'client@example.com',
-    location: ''
+    location: '',
+    subtasks: [
+      { id: '1-1', title: 'Create project outline', isCompleted: true },
+      { id: '1-2', title: 'Gather requirements', isCompleted: false },
+      { id: '1-3', title: 'Draft proposal document', isCompleted: false }
+    ]
   },
   {
     id: '2',
@@ -119,8 +127,31 @@ function generateTaskHTML(task) {
     `;
   }
   
+  // Generate subtasks HTML if available
+  let subtasksHTML = '';
+  if (task.subtasks && task.subtasks.length > 0) {
+    const subtasksList = task.subtasks.map(subtask => `
+      <div class="subtask-item ${subtask.isCompleted ? 'subtask-completed' : ''}" data-id="${subtask.id}">
+        <div class="subtask-checkbox-container">
+          <input type="checkbox" id="subtask-${subtask.id}" class="subtask-checkbox" ${subtask.isCompleted ? 'checked' : ''}>
+          <label for="subtask-${subtask.id}" class="subtask-checkbox-label"></label>
+        </div>
+        <div class="subtask-title">${subtask.title}</div>
+      </div>
+    `).join('');
+    
+    subtasksHTML = `
+      <div class="subtasks-container">
+        ${subtasksList}
+        <button class="add-subtask-btn" data-parent-id="${task.id}">
+          <i class="material-icons">add</i> Add subtask
+        </button>
+      </div>
+    `;
+  }
+  
   return `
-    <div class="task-item" data-id="${task.id}" data-category="${task.category || 'other'}" style="border-left: 4px solid ${task.color}">
+    <div class="task-item" data-id="${task.id}" data-category="${task.category || 'other'}" style="border-color: ${task.color}">
       <div class="task-checkbox-container">
         <input type="checkbox" id="task-${task.id}" class="task-checkbox" ${task.isCompleted ? 'checked' : ''}>
         <label for="task-${task.id}" class="task-checkbox-label"></label>
@@ -136,6 +167,7 @@ function generateTaskHTML(task) {
         ${task.calendarType && task.calendarType !== 'gregorian' ? 
           `<div class="task-calendar-type">${task.calendarType.charAt(0).toUpperCase() + task.calendarType.slice(1)} Calendar</div>` : ''}
         ${tagsHTML}
+        ${subtasksHTML}
       </div>
       ${categoryIcon}
       <div class="task-actions">
@@ -200,6 +232,20 @@ function renderTasks() {
   
   document.querySelectorAll('.task-delete-btn').forEach(btn => {
     btn.addEventListener('click', handleTaskDelete);
+  });
+  
+  // Add event listeners for subtasks
+  document.querySelectorAll('.subtask-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', handleSubtaskStatusChange);
+  });
+  
+  document.querySelectorAll('.add-subtask-btn').forEach(btn => {
+    btn.addEventListener('click', handleAddSubtask);
+  });
+  
+  // Add double-click event listener to task items for quick subtask creation
+  document.querySelectorAll('.task-item').forEach(taskItem => {
+    taskItem.addEventListener('dblclick', handleTaskDoubleClick);
   });
 }
 
@@ -302,12 +348,11 @@ function showTaskForm(task = null) {
                   <span class="priority-label" style="background-color: ${PRIORITY_LEVELS.high.color}">High</span>
                 </label>
                 <label class="priority-option">
-                  <input type="radio" name="priority" value="medium" 
-                    ${(!isEditing || task.priority === 'medium') ? 'checked' : ''}>
+                  <input type="radio" name="priority" value="medium" ${isEditing && task.priority === 'medium' ? 'checked' : ''}>
                   <span class="priority-label" style="background-color: ${PRIORITY_LEVELS.medium.color}">Medium</span>
                 </label>
                 <label class="priority-option">
-                  <input type="radio" name="priority" value="low" ${isEditing && task.priority === 'low' ? 'checked' : ''}>
+                  <input type="radio" name="priority" value="low" ${(!isEditing || task.priority === 'low') ? 'checked' : ''}>
                   <span class="priority-label" style="background-color: ${PRIORITY_LEVELS.low.color}">Low</span>
                 </label>
               </div>
@@ -665,7 +710,7 @@ function saveTaskForm(e) {
   const dueDate = form.querySelector('#task-due-date').value;
   const dueTime = form.querySelector('#task-due-time').value;
   const calendarType = form.querySelector('#task-calendar-type').value;
-  const priority = form.querySelector('input[name="priority"]:checked').value;
+  const priority = form.querySelector('input[name="priority"]:checked')?.value || DEFAULT_TASK_PRIORITY;
   const hasReminder = form.querySelector('#task-reminder').checked;
   
   // Additional fields
@@ -784,3 +829,135 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTasks();
   }
 });
+
+// Handle subtask status change
+function handleSubtaskStatusChange(e) {
+  const subtaskId = e.target.closest('.subtask-item').dataset.id;
+  const taskId = subtaskId.split('-')[0]; // Get parent task ID from subtask ID
+  
+  const task = tasks.find(t => t.id === taskId);
+  if (task && task.subtasks) {
+    const subtask = task.subtasks.find(st => st.id === subtaskId);
+    if (subtask) {
+      subtask.isCompleted = e.target.checked;
+      e.target.closest('.subtask-item').classList.toggle('subtask-completed', subtask.isCompleted);
+      saveTasks();
+    }
+  }
+}
+
+// Handle add subtask button click
+function handleAddSubtask(e) {
+  e.stopPropagation(); // Prevent event from bubbling up
+  
+  const taskId = e.target.closest('.add-subtask-btn').dataset.parentId;
+  const task = tasks.find(t => t.id === taskId);
+  
+  if (task) {
+    showSubtaskForm(task);
+  }
+}
+
+// Handle double-click on task to quickly add subtasks
+function handleTaskDoubleClick(e) {
+  // Skip if clicking on buttons, checkboxes, or subtasks
+  if (e.target.closest('.task-actions') || 
+      e.target.closest('.task-checkbox-container') ||
+      e.target.closest('.subtasks-container')) {
+    return;
+  }
+  
+  const taskId = e.currentTarget.dataset.id;
+  const task = tasks.find(t => t.id === taskId);
+  
+  if (task) {
+    showSubtaskForm(task);
+  }
+}
+
+// Show form to add a new subtask
+function showSubtaskForm(parentTask) {
+  const modalHTML = `
+    <div class="modal-overlay" id="subtask-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Subtask</h2>
+          <button class="modal-close-btn"><i class="material-icons">close</i></button>
+        </div>
+        <div class="modal-body">
+          <form id="subtask-form">
+            <div class="form-group">
+              <label>Parent Task: ${parentTask.title}</label>
+            </div>
+            <div class="form-group">
+              <input type="text" id="subtask-title" placeholder="Subtask Title" required>
+            </div>
+            <div class="form-actions">
+              <input type="hidden" id="parent-task-id" value="${parentTask.id}">
+              <button type="button" class="btn-cancel">Cancel</button>
+              <button type="submit" class="btn-save">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add modal to body
+  const modalContainer = document.createElement('div');
+  modalContainer.innerHTML = modalHTML;
+  document.body.appendChild(modalContainer);
+  
+  // Add event listeners
+  document.querySelector('#subtask-modal .modal-close-btn').addEventListener('click', closeSubtaskForm);
+  document.querySelector('#subtask-modal .btn-cancel').addEventListener('click', closeSubtaskForm);
+  document.getElementById('subtask-form').addEventListener('submit', saveSubtaskForm);
+  
+  // Show modal with animation
+  setTimeout(() => {
+    document.getElementById('subtask-modal').classList.add('active');
+    document.getElementById('subtask-title').focus();
+  }, 10);
+}
+
+// Close subtask form
+function closeSubtaskForm() {
+  const modal = document.getElementById('subtask-modal');
+  if (modal) {
+    modal.classList.remove('active');
+    setTimeout(() => modal.remove(), 300);
+  }
+}
+
+// Save subtask form
+function saveSubtaskForm(e) {
+  e.preventDefault();
+  
+  const parentTaskId = document.getElementById('parent-task-id').value;
+  const subtaskTitle = document.getElementById('subtask-title').value.trim();
+  
+  if (!subtaskTitle) return;
+  
+  const parentTask = tasks.find(t => t.id === parentTaskId);
+  if (parentTask) {
+    // Initialize subtasks array if it doesn't exist
+    if (!parentTask.subtasks) {
+      parentTask.subtasks = [];
+    }
+    
+    // Generate a new subtask ID by combining parent ID with a unique ID
+    const subtaskId = `${parentTaskId}-${Date.now().toString().slice(-4)}`;
+    
+    // Add the new subtask
+    parentTask.subtasks.push({
+      id: subtaskId,
+      title: subtaskTitle,
+      isCompleted: false
+    });
+    
+    saveTasks();
+    renderTasks();
+    closeSubtaskForm();
+    showSnackbar('Subtask added');
+  }
+}
