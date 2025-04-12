@@ -17,10 +17,10 @@ class AIAssistant {
     this.expanded = false;
     this.suggestedCommands = [
       "Add a task to buy groceries tomorrow",
-      "Schedule a meeting with John on Friday",
-      "Show all my high priority tasks",
-      "Create a note about project ideas",
-      "Remind me to call mom on Saturday"
+      "Schedule a meeting with Sarah on Friday at 2pm",
+      "Show my important tasks for this week",
+      "Create a note about my project ideas",
+      "Remind me to call mom on Saturday morning"
     ];
     
     this.initSpeechRecognition();
@@ -77,7 +77,7 @@ class AIAssistant {
     
     const title = document.createElement('div');
     title.className = 'ai-assistant-title';
-    title.innerHTML = '<i class="material-icons">smart_toy</i> AI Assistant';
+    title.innerHTML = '<i class="material-icons">assistant</i> AI Assistant';
     
     this.toggleButton = document.createElement('button');
     this.toggleButton.className = 'ai-assistant-toggle';
@@ -97,7 +97,7 @@ class AIAssistant {
     this.inputField = document.createElement('input');
     this.inputField.type = 'text';
     this.inputField.className = 'ai-assistant-input';
-    this.inputField.placeholder = 'Ask me anything or give me a command...';
+    this.inputField.placeholder = 'Type a question or task to get started...';
     
     const micButton = document.createElement('button');
     micButton.className = 'ai-assistant-btn';
@@ -193,7 +193,7 @@ class AIAssistant {
       this.isRecording = true;
       document.getElementById('ai-mic-btn').classList.add('recording');
       document.getElementById('ai-mic-btn').innerHTML = '<i class="material-icons">mic</i>';
-      this.showResponse("Listening...");
+      this.showResponse("I'm listening - go ahead...");
     } catch (error) {
       console.error("Error starting speech recognition:", error);
       this.showResponse("Couldn't start listening. Please try again.");
@@ -269,7 +269,7 @@ class AIAssistant {
       
     } catch (error) {
       console.error("Error processing command:", error);
-      this.showResponse("I'm sorry, I couldn't process your request. Please try again.");
+      this.showResponse("Sorry about that, I wasn't able to process that request. Could you try phrasing it differently?");
     }
   }
   
@@ -310,7 +310,7 @@ class AIAssistant {
       case 'search':
         return this.searchEntities(intent);
       default:
-        return "I'm not sure what you want me to do. Please try rephrasing your request.";
+        return "I'm not quite sure what you'd like to do. Could you try explaining it differently?";
     }
   }
   
