@@ -92,19 +92,7 @@ function saveTasks() {
 }
 
 // Generate task item HTML
-function getCustomPriorityColor(priority) {
-  const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-  const colors = settings.priorityColors || {
-    high: '#e53935',
-    medium: '#fb8c00',
-    low: '#43a047'
-  };
-  return colors[priority];
-}
-
 function generateTaskHTML(task) {
-  const taskColor = getCustomPriorityColor(task.priority);
-  const style = `--task-color: ${taskColor}20; --task-text-color: ${taskColor}`;
   // Additional detail indicators
   const hasLocation = task.location && task.location.trim() !== '';
   const hasPhone = task.contactPhone && task.contactPhone.trim() !== '';

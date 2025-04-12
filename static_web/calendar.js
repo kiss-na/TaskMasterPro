@@ -188,18 +188,11 @@ function getUpcomingEvents() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  // Get events for selected date
-  const selectedDateEvents = new Set(
-    generateEventsHTML(calendarState.selectedDate)
-      .map(event => event.id)
-  );
-  
-  // Filter upcoming events excluding those already shown
   return calendarState.events
     .filter(event => {
       const eventDate = new Date(event.date);
       eventDate.setHours(0, 0, 0, 0);
-      return eventDate >= today && !selectedDateEvents.has(event.id);
+      return eventDate >= today;
     });
 }
 
