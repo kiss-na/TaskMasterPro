@@ -130,7 +130,29 @@ function generateCalendarHTML() {
     `;
   }
 
-  // Build the calendar
+  // Sort events by date
+function sortEventsByDate(events) {
+  return events.sort((a, b) => {
+    const dateA = new Date(a.date + (a.time ? 'T' + a.time : ''));
+    const dateB = new Date(b.date + (b.time ? 'T' + b.time : ''));
+    return dateA - dateB;
+  });
+}
+
+// Get upcoming events
+function getUpcomingEvents() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  return calendarState.events
+    .filter(event => {
+      const eventDate = new Date(event.date);
+      eventDate.setHours(0, 0, 0, 0);
+      return eventDate >= today;
+    });
+}
+
+// Build the calendar
   return `
     <div class="calendar-container">
       <div class="calendar-header">
@@ -164,6 +186,17 @@ function generateCalendarHTML() {
         <h3 class="events-header">Events for ${formatDate(calendarState.selectedDate)}</h3>
         <div class="events-list" id="events-list">
           ${generateEventsHTML(calendarState.selectedDate)}
+        </div>
+        
+        <h3 class="events-header">Upcoming Events</h3>
+        <div class="events-list" id="upcoming-events">
+          ${sortEventsByDate(getUpcomingEvents())
+            .map(event => `
+              <div class="event-item" style="border-left: 4px solid ${event.color}">
+                <div class="event-time">${formatDate(event.date, event.time)}</div>
+                <div class="event-title">${event.title}</div>
+              </div>
+            `).join('')}
         </div>
       </div>
     </div>
