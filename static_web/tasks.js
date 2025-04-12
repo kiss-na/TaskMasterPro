@@ -247,11 +247,11 @@ function showTaskForm(task = null) {
           <form id="task-form">
             <div class="form-group">
               <label for="task-title">Title</label>
-              <input type="text" id="task-title" required value="${isEditing ? task.title : ''}">
+              <input type="text" id="task-title" placeholder="Enter task title" required value="${isEditing ? task.title : ''}">
             </div>
             <div class="form-group">
               <label for="task-description">Description (optional)</label>
-              <textarea id="task-description">${isEditing ? task.description : ''}</textarea>
+              <textarea id="task-description" placeholder="Enter task description">${isEditing ? task.description : ''}</textarea>
             </div>
             
             <!-- Due Date and Time Section -->
@@ -269,7 +269,7 @@ function showTaskForm(task = null) {
               </div>
               <div class="form-group form-group-half">
                 <label for="task-due-time">Due Time</label>
-                <input type="time" id="task-due-time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
+                <input type="time" id="task-due-time" placeholder="Select time" value="${isEditing && task.dueTime ? task.dueTime : ''}">
               </div>
             </div>
             
@@ -305,7 +305,7 @@ function showTaskForm(task = null) {
                 <div class="form-row">
                   <div class="form-group form-group-half">
                     <label for="task-reminder-time">Reminder Time</label>
-                    <input type="time" id="task-reminder-time" value="${isEditing && task.reminderTime ? task.reminderTime : ''}">
+                    <input type="time" id="task-reminder-time" placeholder="Select time" value="${isEditing && task.reminderTime ? task.reminderTime : ''}">
                   </div>
                   <div class="form-group form-group-half">
                     <label for="task-reminder-frequency">Frequency</label>
@@ -327,7 +327,7 @@ function showTaskForm(task = null) {
                 <div class="form-group">
                   <label for="task-contact-phone">Phone Number</label>
                   <div class="input-with-button">
-                    <input type="tel" id="task-contact-phone" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
+                    <input type="tel" id="task-contact-phone" placeholder="Enter phone number" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
                     <button type="button" class="input-button" id="contact-picker-btn">
                       <i class="material-icons">contact_phone</i>
                     </button>
@@ -346,7 +346,7 @@ function showTaskForm(task = null) {
                 <div class="form-group">
                   <label for="task-location">Place</label>
                   <div class="input-with-button">
-                    <input type="text" id="task-location" value="${isEditing && task.location ? task.location : ''}">
+                    <input type="text" id="task-location" placeholder="Enter location" value="${isEditing && task.location ? task.location : ''}">
                     <button type="button" class="input-button" id="location-picker-btn">
                       <i class="material-icons">place</i>
                     </button>
