@@ -30,6 +30,7 @@ let tasks = [
     reminderTime: '13:00',
     reminderFrequency: 'once',
     contactPhone: '',
+    contactEmail: 'client@example.com',
     location: ''
   },
   {
@@ -46,6 +47,7 @@ let tasks = [
     reminderTime: '',
     reminderFrequency: 'once',
     contactPhone: '',
+    contactEmail: '',
     location: 'Supermarket'
   },
   {
@@ -62,6 +64,7 @@ let tasks = [
     reminderTime: '18:00',
     reminderFrequency: 'weekly',
     contactPhone: '+1234567890',
+    contactEmail: 'mom@familyemail.com',
     location: ''
   }
 ];
@@ -84,14 +87,18 @@ function saveTasks() {
 function generateTaskHTML(task) {
   // Additional detail indicators
   const hasLocation = task.location && task.location.trim() !== '';
-  const hasContact = task.contactPhone && task.contactPhone.trim() !== '';
+  const hasPhone = task.contactPhone && task.contactPhone.trim() !== '';
+  const hasEmail = task.contactEmail && task.contactEmail.trim() !== '';
   
   let additionalInfo = '';
   if (hasLocation) {
     additionalInfo += `<span class="task-location" title="${task.location}"><i class="material-icons">place</i></span>`;
   }
-  if (hasContact) {
+  if (hasPhone) {
     additionalInfo += `<span class="task-contact" title="${task.contactPhone}"><i class="material-icons">phone</i></span>`;
+  }
+  if (hasEmail) {
+    additionalInfo += `<span class="task-email" title="${task.contactEmail}"><i class="material-icons">email</i></span>`;
   }
   
   return `
@@ -313,12 +320,21 @@ function showTaskForm(task = null) {
                   </div>
                 </div>
                 
-                <!-- Contact Field -->
+                <!-- Contact Fields -->
                 <div class="form-group">
                   <div class="input-with-button">
                     <input type="tel" id="task-contact-phone" placeholder="Phone number" value="${isEditing && task.contactPhone ? task.contactPhone : ''}">
                     <button type="button" class="input-button" id="contact-picker-btn">
                       <i class="material-icons">contact_phone</i>
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <div class="input-with-button">
+                    <input type="email" id="task-contact-email" placeholder="Email address" value="${isEditing && task.contactEmail ? task.contactEmail : ''}">
+                    <button type="button" class="input-button" id="email-picker-btn">
+                      <i class="material-icons">email</i>
                     </button>
                   </div>
                 </div>
@@ -378,9 +394,15 @@ function showTaskForm(task = null) {
     reminderDetails.style.display = this.checked ? 'block' : 'none';
   });
   
-  // Contact picker button
+  // Contact picker buttons
   document.getElementById('contact-picker-btn').addEventListener('click', function() {
     // In a real implementation, this would open the device contacts
+    // For now, we'll show a simulated contact picker
+    showContactPicker();
+  });
+  
+  document.getElementById('email-picker-btn').addEventListener('click', function() {
+    // In a real implementation, this would open the Google contacts
     // For now, we'll show a simulated contact picker
     showContactPicker();
   });
@@ -401,33 +423,48 @@ function showTaskForm(task = null) {
 // Simulated contact picker
 function showContactPicker() {
   const contacts = [
-    { name: 'John Smith', phone: '+15551234567' },
-    { name: 'Jane Doe', phone: '+15559876543' },
-    { name: 'Alice Johnson', phone: '+15552223333' },
-    { name: 'Bob Brown', phone: '+15554445555' }
+    { name: 'John Smith', phone: '+15551234567', email: 'john.smith@example.com' },
+    { name: 'Jane Doe', phone: '+15559876543', email: 'jane.doe@example.com' },
+    { name: 'Alice Johnson', phone: '+15552223333', email: 'alice@example.com' },
+    { name: 'Bob Brown', phone: '+15554445555', email: 'bob.brown@gmail.com' }
   ];
+  
+  // Determine if this is being called for phone or email
+  const sourceButtonId = document.activeElement.id;
+  const forEmail = sourceButtonId === 'email-picker-btn';
+  const title = forEmail ? 'Select Email Contact' : 'Select Phone Contact';
   
   const pickerHTML = `
     <div class="modal-overlay" id="contact-picker-modal">
       <div class="modal-content picker-content">
         <div class="modal-header">
-          <h2>Select Contact</h2>
+          <h2>${title}</h2>
           <button class="modal-close-btn"><i class="material-icons">close</i></button>
         </div>
         <div class="modal-body">
+          <div class="picker-tabs">
+            <button class="picker-tab ${!forEmail ? 'active' : ''}" data-type="phone">Phone</button>
+            <button class="picker-tab ${forEmail ? 'active' : ''}" data-type="email">Email</button>
+          </div>
           <div class="picker-search">
             <input type="text" placeholder="Search contacts..." class="picker-search-input">
           </div>
           <div class="picker-list">
             ${contacts.map(contact => `
-              <div class="picker-item" data-value="${contact.phone}">
+              <div class="picker-item" data-phone="${contact.phone}" data-email="${contact.email}">
                 <i class="material-icons picker-item-icon">person</i>
                 <div class="picker-item-details">
                   <div class="picker-item-title">${contact.name}</div>
-                  <div class="picker-item-subtitle">${contact.phone}</div>
+                  <div class="picker-item-subtitle">${forEmail ? contact.email : contact.phone}</div>
                 </div>
               </div>
             `).join('')}
+          </div>
+          <div class="picker-google-connect">
+            <button class="google-connect-btn">
+              <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="18" height="18">
+              Connect Google Contacts
+            </button>
           </div>
         </div>
       </div>
@@ -446,19 +483,48 @@ function showContactPicker() {
   
   document.querySelectorAll('#contact-picker-modal .picker-item').forEach(item => {
     item.addEventListener('click', function() {
-      const phoneNumber = this.dataset.value;
-      document.getElementById('task-contact-phone').value = phoneNumber;
+      const phoneNumber = this.dataset.phone;
+      const email = this.dataset.email;
+      
+      if (forEmail) {
+        document.getElementById('task-contact-email').value = email;
+      } else {
+        document.getElementById('task-contact-phone').value = phoneNumber;
+      }
+      
       document.getElementById('contact-picker-modal').remove();
     });
+  });
+  
+  // Tab switching
+  document.querySelectorAll('.picker-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      const type = this.dataset.type;
+      document.querySelectorAll('.picker-tab').forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Update the contact list to show emails or phones
+      document.querySelectorAll('.picker-item').forEach(item => {
+        const subtitle = item.querySelector('.picker-item-subtitle');
+        subtitle.textContent = type === 'email' ? item.dataset.email : item.dataset.phone;
+      });
+    });
+  });
+  
+  // Google connect button (simulated)
+  document.querySelector('.google-connect-btn').addEventListener('click', function() {
+    showSnackbar('Google Contacts integration would be implemented here');
   });
   
   // Show the search functionality (simulated)
   document.querySelector('.picker-search-input').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
+    const isEmailTab = document.querySelector('.picker-tab[data-type="email"]').classList.contains('active');
+    
     document.querySelectorAll('.picker-item').forEach(item => {
       const name = item.querySelector('.picker-item-title').textContent.toLowerCase();
-      const phone = item.querySelector('.picker-item-subtitle').textContent.toLowerCase();
-      const match = name.includes(searchTerm) || phone.includes(searchTerm);
+      const contactValue = isEmailTab ? item.dataset.email.toLowerCase() : item.dataset.phone.toLowerCase();
+      const match = name.includes(searchTerm) || contactValue.includes(searchTerm);
       item.style.display = match ? 'flex' : 'none';
     });
   });
@@ -572,6 +638,7 @@ function saveTaskForm(e) {
   const reminderTime = form.querySelector('#task-reminder-time')?.value || '';
   const reminderFrequency = form.querySelector('#task-reminder-frequency')?.value || 'once';
   const contactPhone = form.querySelector('#task-contact-phone')?.value || '';
+  const contactEmail = form.querySelector('#task-contact-email')?.value || '';
   const location = form.querySelector('#task-location')?.value || '';
   
   if (!title) {
@@ -602,6 +669,7 @@ function saveTaskForm(e) {
       }
       
       task.contactPhone = contactPhone;
+      task.contactEmail = contactEmail;
       task.location = location;
       
       showSnackbar('Task updated');
@@ -622,6 +690,7 @@ function saveTaskForm(e) {
       reminderTime: hasReminder ? reminderTime : '',
       reminderFrequency: hasReminder ? reminderFrequency : 'once',
       contactPhone,
+      contactEmail,
       location
     };
     tasks.push(newTask);
