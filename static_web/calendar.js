@@ -74,21 +74,67 @@ function generateCalendarHTML() {
 
   // Create calendar cells
   let daysHTML = '';
+  let calendarGridHTML = '';
   
-  // If Nepali calendar is selected, show Clean Nepali Calendar
   if (calendarState.type === 'nepali') {
-    return `
-      <div class="calendar-container">
-        <div class="calendar-header">
-          <div class="calendar-type-selector">
-            <select id="calendar-type">
-              <option value="gregorian">Gregorian</option>
-              <option value="nepali" selected>Nepali</option>
-            </select>
-          </div>
+    calendarGridHTML = `
+      <div id="clean-nepali-calendar" class="clean-nepali-calendar">
+        <div class="calendar-grid">
+          ${generateNepaliCalendarGrid()}
         </div>
-        <div id="clean-nepali-calendar" class="clean-nepali-calendar"></div>
-        <div class="calendar-events">
+      </div>`;
+  } else {
+    // Generate Gregorian calendar grid
+    dayHeadersHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const dayIndex = (CALENDAR_TYPES[calendarState.type].firstDayOfWeek + i) % 7;
+      dayHeadersHTML += `<div class="calendar-day-header">${CALENDAR_TYPES[calendarState.type].dayNames[dayIndex]}</div>`;
+    }
+    
+    // Add empty cells for days before the first day of the month
+    const firstDay = new Date(calendarState.currentDate.getFullYear(), calendarState.currentDate.getMonth(), 1);
+    let firstDayOfWeek = firstDay.getDay();
+    firstDayOfWeek = (firstDayOfWeek - CALENDAR_TYPES[calendarState.type].firstDayOfWeek + 7) % 7;
+    
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      daysHTML += '<div class="calendar-day empty"></div>';
+    }
+    
+    // Add days of the month
+    const lastDay = new Date(calendarState.currentDate.getFullYear(), calendarState.currentDate.getMonth() + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(calendarState.currentDate.getFullYear(), calendarState.currentDate.getMonth(), day);
+      const isToday = isSameDay(date, new Date());
+      const isSelected = isSameDay(date, calendarState.selectedDate);
+      
+      daysHTML += `
+        <div class="calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}"
+             data-date="${formatDateForAttribute(date)}">
+          <span class="day-number">${day}</span>
+        </div>`;
+    }
+    
+    calendarGridHTML = `
+      <div class="calendar-grid">
+        ${dayHeadersHTML}
+        ${daysHTML}
+      </div>`;
+  }
+  
+  return `
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <div class="calendar-type-selector">
+          <select id="calendar-type">
+            <option value="gregorian" ${calendarState.type === 'gregorian' ? 'selected' : ''}>Gregorian</option>
+            <option value="nepali" ${calendarState.type === 'nepali' ? 'selected' : ''}>Nepali</option>
+          </select>
+        </div>
+      </div>
+      ${calendarGridHTML}
+      <div class="calendar-events">
           <h3 class="events-header">Events for ${formatDate(calendarState.selectedDate)}</h3>
           <div class="events-list" id="events-list">
             ${generateEventsHTML(calendarState.selectedDate)}
@@ -238,10 +284,41 @@ function getUpcomingEvents() {
   `;
 }
 
-// Format date for display
+// Helper functions
+function isSameDay(date1, date2) {
+  return date1.getFullYear() === date2.getFullYear() &&
+         date1.getMonth() === date2.getMonth() &&
+         date1.getDate() === date2.getDate();
+}
+
+function formatDateForAttribute(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
 function formatDate(date) {
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   return date.toLocaleDateString('en-US', options);
+}
+
+function generateNepaliCalendarGrid() {
+  const nepaliMonths = CALENDAR_TYPES.nepali.monthNames;
+  const nepaliDays = CALENDAR_TYPES.nepali.dayNames;
+  
+  let gridHTML = '';
+  // Add day headers
+  for (const day of nepaliDays) {
+    gridHTML += `<div class="calendar-day-header">${day}</div>`;
+  }
+  
+  // Add placeholder days for demo
+  for (let i = 1; i <= 35; i++) {
+    gridHTML += `
+      <div class="calendar-day">
+        <span class="day-number">${i}</span>
+      </div>`;
+  }
+  
+  return gridHTML;
 }
 
 // Generate events HTML for selected date
