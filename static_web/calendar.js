@@ -338,7 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Show event creation form
 function showEventForm() {
   const modal = document.createElement('div');
-  modal.className = 'modal-overlay active';
+  modal.id = 'event-form-modal';
+  modal.className = 'modal-overlay';
   modal.innerHTML = `
     <div class="modal-content">
       <div class="modal-header">
@@ -387,10 +388,8 @@ function showEventForm() {
 
   document.body.appendChild(modal);
   
-  // Activate modal with animation
-  requestAnimationFrame(() => {
-    modal.classList.add('active');
-  });
+  // Activate modal immediately
+  modal.classList.add('active');
 
   // Event handlers
   const form = modal.querySelector('#event-form');
