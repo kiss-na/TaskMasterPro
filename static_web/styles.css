@@ -664,6 +664,35 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.calendar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.add-event-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.add-event-btn:hover {
+  background-color: #3367d6;
+}
+
+.add-event-btn i {
+  font-size: 18px;
 }
 
 .calendar-nav {

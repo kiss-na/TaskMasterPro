@@ -51,48 +51,48 @@ function generateCalendarHTML() {
   const calType = CALENDAR_TYPES[calendarState.type];
   const year = calendarState.currentDate.getFullYear();
   const month = calendarState.currentDate.getMonth();
-  
+
   // Get first day of the month
   const firstDay = new Date(year, month, 1);
   // Get last day of the month
   const lastDay = new Date(year, month + 1, 0);
-  
+
   // Get the day of the week of the first day (0-6)
   let firstDayOfWeek = firstDay.getDay();
   // Adjust for the first day of the week based on calendar type
   firstDayOfWeek = (firstDayOfWeek - calType.firstDayOfWeek + 7) % 7;
-  
+
   // Number of days in the month
   const daysInMonth = lastDay.getDate();
-  
+
   // Create day header cells
   let dayHeadersHTML = '';
   for (let i = 0; i < 7; i++) {
     const dayIndex = (calType.firstDayOfWeek + i) % 7;
     dayHeadersHTML += `<div class="calendar-day-header">${calType.dayNames[dayIndex]}</div>`;
   }
-  
+
   // Create calendar cells
   let daysHTML = '';
   // Add empty cells for days before the first day of the month
   for (let i = 0; i < firstDayOfWeek; i++) {
     daysHTML += '<div class="calendar-day empty"></div>';
   }
-  
+
   // Add days of the month
   const today = new Date();
   const selectedDateStr = calendarState.selectedDate.toDateString();
-  
+
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month, day);
     const dateStr = date.toDateString();
-    
+
     const isToday = today.getFullYear() === year && 
                     today.getMonth() === month && 
                     today.getDate() === day;
-    
+
     const isSelected = selectedDateStr === dateStr;
-    
+
     // Check if there are events on this day
     const hasEvents = calendarState.events.some(event => {
       const eventDate = new Date(event.date);
@@ -100,7 +100,7 @@ function generateCalendarHTML() {
              eventDate.getMonth() === month && 
              eventDate.getDate() === day;
     });
-    
+
     // Count events for this day (for event dots)
     const dayEvents = calendarState.events.filter(event => {
       const eventDate = new Date(event.date);
@@ -108,7 +108,7 @@ function generateCalendarHTML() {
              eventDate.getMonth() === month && 
              eventDate.getDate() === day;
     });
-    
+
     let eventDotsHTML = '';
     if (dayEvents.length > 0) {
       const maxDots = 3; // Max dots to show
@@ -120,7 +120,7 @@ function generateCalendarHTML() {
         eventDotsHTML += `<span class="event-more">+${dayEvents.length - maxDots}</span>`;
       }
     }
-    
+
     daysHTML += `
       <div class="calendar-day ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''} ${hasEvents ? 'has-events' : ''}" 
            data-date="${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}">
@@ -129,11 +129,16 @@ function generateCalendarHTML() {
       </div>
     `;
   }
-  
+
   // Build the calendar
   return `
     <div class="calendar-container">
       <div class="calendar-header">
+        <div class="calendar-actions">
+          <button class="add-event-btn" onclick="showEventForm()">
+            <i class="material-icons">add</i> Add Event
+          </button>
+        </div>
         <div class="calendar-nav">
           <button class="prev-month-btn"><i class="material-icons">chevron_left</i></button>
           <div class="current-month-year">
@@ -174,13 +179,13 @@ function formatDate(date) {
 // Generate events HTML for selected date
 function generateEventsHTML(date) {
   const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-  
+
   const events = calendarState.events.filter(event => event.date === formattedDate);
-  
+
   if (events.length === 0) {
     return '<div class="no-events">No events for this day</div>';
   }
-  
+
   let eventsHTML = '';
   events.forEach(event => {
     eventsHTML += `
@@ -190,7 +195,7 @@ function generateEventsHTML(date) {
       </div>
     `;
   });
-  
+
   return eventsHTML;
 }
 
@@ -198,13 +203,13 @@ function generateEventsHTML(date) {
 function handleCalendarNavigation(direction) {
   const currentDate = calendarState.currentDate;
   const newDate = new Date(currentDate);
-  
+
   if (direction === 'prev') {
     newDate.setMonth(currentDate.getMonth() - 1);
   } else {
     newDate.setMonth(currentDate.getMonth() + 1);
   }
-  
+
   calendarState.currentDate = newDate;
   renderCalendar();
 }
@@ -219,7 +224,7 @@ function handleCalendarTypeChange(e) {
 function handleDateSelection(e) {
   const target = e.target.closest('.calendar-day');
   if (!target || target.classList.contains('empty')) return;
-  
+
   const dateStr = target.dataset.date;
   if (dateStr) {
     const [year, month, day] = dateStr.split('-');
@@ -232,20 +237,21 @@ function handleDateSelection(e) {
 function renderCalendar() {
   const calendarTab = document.querySelector('.tab-content[data-tab="calendar"]');
   if (!calendarTab) return;
-  
+
   calendarTab.innerHTML = generateCalendarHTML();
-  
+
   // Add event listeners
   calendarTab.querySelector('.prev-month-btn').addEventListener('click', () => handleCalendarNavigation('prev'));
   calendarTab.querySelector('.next-month-btn').addEventListener('click', () => handleCalendarNavigation('next'));
   calendarTab.querySelector('#calendar-type').addEventListener('change', handleCalendarTypeChange);
-  
+
   // Add event listeners to date cells
   const dateCells = calendarTab.querySelectorAll('.calendar-day:not(.empty)');
   dateCells.forEach(cell => {
     cell.addEventListener('click', handleDateSelection);
   });
 }
+
 
 // Load events from tasks
 function loadEventsFromTasks() {
@@ -255,13 +261,13 @@ function loadEventsFromTasks() {
     medium: '#fb8c00',  // orange
     low: '#43a047'      // green
   };
-  
+
   try {
     // Try to load tasks from localStorage
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       const tasks = JSON.parse(savedTasks);
-      
+
       // Convert tasks to events with priority colors
       calendarState.events = tasks.map(task => ({
         id: task.id,
@@ -299,13 +305,13 @@ function loadEventsFromTasks() {
     console.error('Error loading tasks for calendar:', e);
     calendarState.events = [];
   }
-  
+
   try {
     // Try to load tasks from localStorage
     const savedTasks = localStorage.getItem('tasks');
     if (savedTasks) {
       const tasks = JSON.parse(savedTasks);
-      
+
       // Convert tasks to events
       const taskEvents = tasks.map(task => ({
         id: task.id,
@@ -314,7 +320,7 @@ function loadEventsFromTasks() {
         color: task.color,
         time: '' // We don't have time in tasks yet
       }));
-      
+
       // Merge with existing events
       calendarState.events = taskEvents;
     }
@@ -326,4 +332,11 @@ function loadEventsFromTasks() {
 // Initialize calendar
 document.addEventListener('DOMContentLoaded', function() {
   loadEventsFromTasks();
+  renderCalendar();
 });
+
+// Placeholder function for event form
+function showEventForm() {
+  // Implement event form functionality here
+  alert("Event form not yet implemented");
+}
