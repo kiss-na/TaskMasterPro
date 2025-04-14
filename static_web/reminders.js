@@ -320,14 +320,27 @@ function formatDate(dateStr) {
 }
 
 // Render all reminders
-function renderReminders(typeFilter = 'all') {
+function renderReminders(categoryFilter = 'all') {
   const remindersList = document.getElementById('reminders-list');
   if (!remindersList) return;
   
-  // Filter reminders by type if needed
+  // Filter reminders by category
   let filteredReminders = reminders;
-  if (typeFilter !== 'all') {
-    filteredReminders = reminders.filter(r => r.type === typeFilter);
+  if (categoryFilter !== 'all') {
+    filteredReminders = reminders.filter(reminder => {
+      switch(categoryFilter) {
+        case 'health':
+          return reminder.type === 'water' || reminder.type === 'pomodoro';
+        case 'birthday':
+          return reminder.type === 'birthday';
+        case 'social':
+          return reminder.type === 'socialization';
+        case 'other':
+          return !['water', 'pomodoro', 'birthday', 'socialization'].includes(reminder.type);
+        default:
+          return true;
+      }
+    });
   }
   
   // Sort reminders: enabled first, then by type
@@ -681,10 +694,18 @@ function filterRemindersByType(e) {
 document.addEventListener('DOMContentLoaded', function() {
   const remindersTab = document.querySelector('.tab-content[data-tab="reminders"]');
   if (remindersTab) {
-    // Create type filter options
-    let filterOptionsHTML = '<option value="all">All Types</option>';
-    Object.entries(REMINDER_TYPES).forEach(([key, type]) => {
-      filterOptionsHTML += `<option value="${key}">${type.name}</option>`;
+    loadReminders();
+    
+    // Set up category tab click handlers
+    document.querySelectorAll('.category-tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        this.classList.add('active');
+        // Filter reminders by category
+        renderReminders(this.dataset.category);
+      });
     });
     
     remindersTab.innerHTML = `
