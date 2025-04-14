@@ -49,7 +49,6 @@ const WEEKDAYS = [
 
 // Sample reminders
 let reminders = [
-  // Health Category
   {
     id: '1',
     title: 'Drink Water',
@@ -58,119 +57,8 @@ let reminders = [
     frequency: 'daily',
     times: ['09:00', '11:00', '13:00', '15:00', '17:00'],
     isEnabled: true,
-    interval: 120
+    interval: 120 // minutes between reminders
   },
-  {
-    id: '2',
-    title: 'Focus Time',
-    description: 'Deep work session with breaks',
-    type: 'pomodoro',
-    frequency: 'daily',
-    times: ['10:00', '14:00'],
-    weekdays: [1, 2, 3, 4, 5],
-    isEnabled: true,
-    duration: 25,
-    breakDuration: 5
-  },
-  {
-    id: '3',
-    title: 'Take Vitamins',
-    description: 'Daily supplements routine',
-    type: 'health',
-    frequency: 'daily',
-    time: '08:00',
-    isEnabled: true
-  },
-  // Birthday Category
-  {
-    id: '4',
-    title: 'Mom\'s Birthday',
-    description: 'Get flowers and call',
-    type: 'birthday',
-    frequency: 'yearly',
-    date: '2024-05-15',
-    time: '09:00',
-    isEnabled: true,
-    phoneNumber: '+1234567890'
-  },
-  {
-    id: '5',
-    title: 'Sister\'s Birthday',
-    description: 'Send gift card',
-    type: 'birthday',
-    frequency: 'yearly',
-    date: '2024-07-20',
-    time: '10:00',
-    isEnabled: true,
-    phoneNumber: '+0987654321'
-  },
-  // Social Category
-  {
-    id: '6',
-    title: 'Team Meeting',
-    description: 'Weekly project sync',
-    type: 'socialization',
-    frequency: 'weekly',
-    times: ['14:00'],
-    weekdays: [2],
-    isEnabled: true,
-    meetingLink: 'https://meet.google.com/abc'
-  },
-  {
-    id: '7',
-    title: 'Family Video Call',
-    description: 'Weekly catch-up',
-    type: 'socialization',
-    frequency: 'weekly',
-    time: '20:00',
-    weekdays: [7],
-    isEnabled: true
-  },
-  // Study/Work Category
-  {
-    id: '8',
-    title: 'Project Deadline',
-    description: 'Submit final report',
-    type: 'work',
-    frequency: 'once',
-    date: '2024-04-30',
-    time: '17:00',
-    isEnabled: true,
-    priority: 'high'
-  },
-  {
-    id: '9',
-    title: 'Study Session',
-    description: 'Review course materials',
-    type: 'study',
-    frequency: 'weekly',
-    times: ['16:00'],
-    weekdays: [1, 3, 5],
-    isEnabled: true,
-    duration: 60
-  },
-  // Custom/Other Category
-  {
-    id: '10',
-    title: 'Water Plants',
-    description: 'Indoor plants maintenance',
-    type: 'custom',
-    frequency: 'weekly',
-    time: '09:00',
-    weekdays: [6],
-    isEnabled: true
-  },
-  {
-    id: '11',
-    title: 'Car Maintenance',
-    description: 'Regular service check',
-    type: 'custom',
-    frequency: 'monthly',
-    date: '2024-05-01',
-    time: '11:00',
-    isEnabled: true,
-    repeatEvery: 3 // months
-  }
   {
     id: '2',
     title: 'Focus Time',
@@ -853,11 +741,10 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
       <div class="reminder-categories">
         <button class="category-tab active" data-category="all">All</button>
-        <button class="category-tab" data-category="health">Health & Wellness</button>
-        <button class="category-tab" data-category="birthday">Birthdays</button>
+        <button class="category-tab" data-category="health">Health</button>
+        <button class="category-tab" data-category="birthday">Birthday</button>
         <button class="category-tab" data-category="social">Social</button>
-        <button class="category-tab" data-category="work">Study/Work</button>
-        <button class="category-tab" data-category="other">Custom</button>
+        <button class="category-tab" data-category="other">Other</button>
       </div>
       <div id="reminders-list" class="reminders-list"></div>
     `;
