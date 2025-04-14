@@ -50,6 +50,15 @@ task = "shell.exec"
 args = "cd static_web && python3 -m http.server 5000"
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "APK Download Server"
+author = 41461236
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python server.py"
+
 [deployment]
 run = ["sh", "-c", "node index.js"]
 
