@@ -473,9 +473,41 @@ main {
 /* Task styles */
 .task-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+}
+
+.task-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #e0e0e0;
+  width: 100%;
+}
+
+.task-tab {
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  position: relative;
+}
+
+.task-tab.active {
+  color: #1a73e8;
+  font-weight: 500;
+}
+
+.task-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #1a73e8;
 }
 
 .task-filter {
@@ -1192,7 +1224,7 @@ main {
 
 .switch input {
   opacity: 0;
-  width: 0;
+  width:0;
   height: 0;
 }
 
@@ -1493,4 +1525,30 @@ input:checked + .slider:before {
 .note-item,
 .task-item {
   cursor: pointer;
+}
+
+.task-metrics {
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.metric-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.metric-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 500;
+  color: #1a73e8;
 }

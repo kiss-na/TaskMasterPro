@@ -15,15 +15,33 @@
     <header class="app-header">
       <h1>Task Manager</h1>
     </header>
-    
+
     <main id="main-content">
-      <!-- Tab content will be inserted here -->
+      <div class="tasks-container">
+        <div class="task-header">
+          <h2 class="tab-section-title">My Tasks</h2>
+          <div class="task-tabs">
+            <button class="task-tab active" data-tab="todo">To Do</button>
+            <button class="task-tab" data-tab="done">Done</button>
+            <button class="task-tab" data-tab="metrics">Metrics</button>
+          </div>
+        </div>
+        <div class="task-list" id="task-list-todo">
+          <!-- To Do tasks will be added here -->
+        </div>
+        <div class="task-list" id="task-list-done" style="display:none;">
+          <!-- Done tasks will be added here -->
+        </div>
+        <div class="task-list" id="task-list-metrics" style="display:none;">
+          <!-- Metrics will be added here -->
+        </div>
+      </div>
     </main>
-    
+
     <button class="fab" id="fab">
       <i class="material-icons">add</i>
     </button>
-    
+
     <div class="bottom-nav" id="bottom-nav">
       <div class="nav-item active" data-tab="tasks">
         <i class="material-icons nav-icon">check_circle</i>
@@ -42,61 +60,23 @@
         <span class="nav-label">Reminders</span>
       </div>
       <div class="nav-item" data-tab="settings">
-
-<div class="tab-content" data-tab="settings">
-  <div class="settings-section">
-    <h3>Subscription</h3>
-    <div id="subscription-status"></div>
-    <div class="subscription-tiers">
-      <div class="tier-card">
-        <h4>Free</h4>
-        <ul>
-          <li>Basic tasks & notes</li>
-          <li>1 calendar sync</li>
-          <li>3 birthday reminders</li>
-        </ul>
-      </div>
-      <div class="tier-card premium">
-        <h4>Premium</h4>
-        <ul>
-          <li>AI morning check</li>
-          <li>Unlimited calendar syncs</li>
-          <li>Unlimited birthday reminders</li>
-          <li>Location-based alerts</li>
-          <li>Advanced analytics</li>
-        </ul>
-        <button id="upgrade-btn" class="btn-primary">Upgrade to Premium ($5/month)</button>
-      </div>
-    </div>
-    <div id="payment-methods" class="payment-methods" style="display: none;">
-      <h4>Select Payment Method</h4>
-      <div class="payment-options">
-        <button class="payment-btn" data-method="card">Credit/Debit Card</button>
-        <button class="payment-btn" data-method="skrill">Skrill</button>
-        <button class="payment-btn" data-method="esewa">eSewa</button>
-        <button class="payment-btn" data-method="paypal">PayPal</button>
-      </div>
-    </div>
-  </div>
-</div>
-
         <i class="material-icons nav-icon">settings</i>
         <span class="nav-label">Settings</span>
       </div>
     </div>
   </div>
-  
+
   <div class="snackbar" id="snackbar"></div>
-  
+
   <!-- Main app script -->
   <script src="app.js"></script>
-  
+
   <!-- Feature scripts -->
   <script src="tasks.js"></script>
   <script src="calendar.js"></script>
   <script src="notes.js"></script>
   <script src="reminders.js"></script>
-  
+
   <!-- Advanced features -->
   <script src="task-intelligence.js"></script>
   <script src="cloud-sync.js"></script>

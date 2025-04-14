@@ -196,9 +196,20 @@ function formatDate(dateStr, timeStr) {
 }
 
 // Render all tasks
-function renderTasks() {
+function renderTasks(activeTab = 'todo') {
   const taskList = document.getElementById('task-list');
   if (!taskList) return;
+
+  // Filter tasks based on active tab
+  let filteredTasks = tasks;
+  if (activeTab === 'todo') {
+    filteredTasks = tasks.filter(task => !task.isCompleted);
+  } else if (activeTab === 'done') {
+    filteredTasks = tasks.filter(task => task.isCompleted);
+  } else if (activeTab === 'metrics') {
+    renderMetrics();
+    return;
+  }
 
   // Sort tasks: incomplete first, then by priority, then by due date
   const sortedTasks = [...tasks].sort((a, b) => {
@@ -974,4 +985,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     loadTasks();
   }
+});
+function renderMetrics() {
+  const taskList = document.getElementById('task-list');
+  if (!taskList) return;
+
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(task => task.isCompleted).length;
+  const completionRate = totalTasks ? ((completedTasks / totalTasks) * 100).toFixed(1) : 0;
+  
+  taskList.innerHTML = `
+    <div class="task-metrics">
+      <div class="metric-card">
+        <div class="metric-title">Total Tasks</div>
+        <div class="metric-value">${totalTasks}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Completed Tasks</div>
+        <div class="metric-value">${completedTasks}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-title">Completion Rate</div>
+        <div class="metric-value">${completionRate}%</div>
+      </div>
+    </div>
+  `;
+}
+
+// Add event listeners for task tabs
+document.addEventListener('DOMContentLoaded', function() {
+  const taskTabs = document.querySelectorAll('.task-tab');
+  taskTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      taskTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      renderTasks(this.dataset.tab);
+    });
+  });
 });
