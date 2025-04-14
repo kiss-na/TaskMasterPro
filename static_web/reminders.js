@@ -648,13 +648,12 @@ document.addEventListener('DOMContentLoaded', function() {
     remindersTab.innerHTML = `
       <div class="reminders-header">
         <h2 class="tab-section-title">My Reminders</h2>
-      </div>
-      <div class="reminder-categories">
-        <button class="category-tab active" data-category="all">All</button>
-        <button class="category-tab" data-category="health">Health</button>
-        <button class="category-tab" data-category="birthday">Birthday</button>
-        <button class="category-tab" data-category="social">Social</button>
-        <button class="category-tab" data-category="other">Other</button>
+        <div class="reminders-filter">
+          <label for="reminder-type-filter" class="visually-hidden">Filter by type</label>
+          <select id="reminder-type-filter">
+            ${filterOptionsHTML}
+          </select>
+        </div>
       </div>
       <div id="reminders-list" class="reminders-list"></div>
     `;
