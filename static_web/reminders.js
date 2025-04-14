@@ -266,18 +266,14 @@ function formatTime(timeStr) {
 }
 
 // Format date for display
-function formatDate(dateInput) {
-  if (!dateInput) return '';
+function formatDate(dateStr) {
+  if (!dateStr) return '';
   
   try {
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-    if (!(date instanceof Date) || isNaN(date)) {
-      return typeof dateInput === 'string' ? dateInput : '';
-    }
+    const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   } catch (e) {
-    console.error('Date formatting error:', e);
-    return typeof dateInput === 'string' ? dateInput : '';
+    return dateStr;
   }
 }
 
@@ -640,12 +636,9 @@ function filterRemindersByType(e) {
 }
 
 // Initialize reminders
-function initializeReminders() {
+document.addEventListener('DOMContentLoaded', function() {
   const remindersTab = document.querySelector('.tab-content[data-tab="reminders"]');
-  if (!remindersTab) return;
-  
-  // Clear existing content
-  remindersTab.innerHTML = '';
+  if (remindersTab) {
     // Create type filter options
     let filterOptionsHTML = '<option value="all">All Types</option>';
     Object.entries(REMINDER_TYPES).forEach(([key, type]) => {
@@ -655,12 +648,13 @@ function initializeReminders() {
     remindersTab.innerHTML = `
       <div class="reminders-header">
         <h2 class="tab-section-title">My Reminders</h2>
-        <div class="reminders-filter">
-          <label for="reminder-type-filter" class="visually-hidden">Filter by type</label>
-          <select id="reminder-type-filter">
-            ${filterOptionsHTML}
-          </select>
-        </div>
+      </div>
+      <div class="reminder-categories">
+        <button class="category-tab active" data-category="all">All</button>
+        <button class="category-tab" data-category="health">Health</button>
+        <button class="category-tab" data-category="birthday">Birthday</button>
+        <button class="category-tab" data-category="social">Social</button>
+        <button class="category-tab" data-category="other">Other</button>
       </div>
       <div id="reminders-list" class="reminders-list"></div>
     `;
