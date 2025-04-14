@@ -94,7 +94,58 @@ function loadReminders() {
 
 // Save reminders to localStorage
 function saveReminders() {
+  const subscription = JSON.parse(localStorage.getItem('subscription') || '{"tier": "free"}');
+  const birthdayReminders = reminders.filter(r => r.type === 'birthday');
+  
+  if (subscription.tier === 'free' && birthdayReminders.length > 3) {
+    throw new Error('Free tier limited to 3 birthday reminders. Upgrade to Premium for unlimited!');
+  }
+  
   localStorage.setItem('reminders', JSON.stringify(reminders));
+}
+
+function checkLocationBasedAlerts(position) {
+  const giftShops = [
+    { name: "Gift Gallery", lat: 40.7128, lng: -74.0060 },
+    { name: "Present Paradise", lat: 34.0522, lng: -118.2437 }
+  ];
+  
+  const birthdays = reminders.filter(r => 
+    r.type === 'birthday' && 
+    isUpcoming(r.date, 7) // within next 7 days
+  );
+  
+  giftShops.forEach(shop => {
+    const distance = calculateDistance(
+      position.coords.latitude,
+      position.coords.longitude,
+      shop.lat,
+      shop.lng
+    );
+    
+    if (distance < 0.5) { // within 0.5 km
+      birthdays.forEach(birthday => {
+        showNotification(
+          `Birthday Alert: ${birthday.name}`,
+          `You're near ${shop.name}! Perfect time to buy a gift.`,
+          () => { window.location.href = `tel:${birthday.phoneNumber}`; }
+        );
+      });
+    }
+  });
+}
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  // Haversine formula implementation
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
 }
 
 // Generate reminder item HTML

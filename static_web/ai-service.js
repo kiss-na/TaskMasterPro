@@ -258,6 +258,22 @@ class AIService {
 
 class AIService {
   constructor() {
+    this.subscriptionTiers = {
+      free: {
+        calendarSyncs: 1,
+        birthdayReminders: 3,
+        hasAIAssistant: false,
+        hasAdvancedAnalytics: false
+      },
+      premium: {
+        calendarSyncs: -1, // unlimited
+        birthdayReminders: -1, // unlimited
+        hasAIAssistant: true,
+        hasAdvancedAnalytics: true,
+        price: 5
+      }
+    };
+
     this.categories = {
       work: ['meeting', 'project', 'deadline', 'presentation', 'client'],
       health: ['doctor', 'medicine', 'exercise', 'workout', 'gym'],

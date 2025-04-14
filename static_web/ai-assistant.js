@@ -671,3 +671,30 @@ document.addEventListener('DOMContentLoaded', function() {
   // Make it available globally
   window.aiAssistant = aiAssistant;
 });
+async function performMorningCheck() {
+  const subscription = JSON.parse(localStorage.getItem('subscription') || '{"tier": "free"}');
+  if (subscription.tier !== 'premium') {
+    return 'Upgrade to Premium to access AI morning check!';
+  }
+
+  const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+  const today = new Date().toISOString().split('T')[0];
+  
+  const todaysTasks = tasks.filter(task => task.dueDate === today);
+  const priorityTasks = todaysTasks.filter(task => task.priority === 'high');
+  const meetings = todaysTasks.filter(task => task.isEvent);
+
+  let summary = `Good morning! Here's your day:\n\n`;
+  
+  if (priorityTasks.length > 0) {
+    summary += `🚨 Priority Tasks:\n`;
+    priorityTasks.forEach(task => summary += `- ${task.title}\n`);
+  }
+
+  if (meetings.length > 0) {
+    summary += `\n📅 Today's Meetings:\n`;
+    meetings.forEach(meeting => summary += `- ${meeting.title} at ${meeting.time}\n`);
+  }
+
+  return summary;
+}
