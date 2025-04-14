@@ -830,6 +830,7 @@ const TaskIntelligence = {
   showSuggestionsNotification: function(count) {
     // Add an indicator to the UI
     const appHeader = document.querySelector('.app-header');
+    if (!appHeader) return;
     
     if (appHeader && !document.querySelector('.suggestion-indicator')) {
       const notificationHTML = `

@@ -256,11 +256,19 @@ class AIService {
   }
 }
 
+class AIService {
+  constructor() {
+    console.log('AI Service initialized in basic mode');
+  }
+}
+
 // Initialize the AI Service when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize the AI Service
-  const aiService = new AIService();
-  
-  // Make it available globally
-  window.aiService = aiService;
+  if (document.querySelector('.ai-service-container')) {
+    // Initialize the AI Service
+    const aiService = new AIService();
+    
+    // Make it available globally
+    window.aiService = aiService;
+  }
 });
