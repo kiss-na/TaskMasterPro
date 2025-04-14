@@ -324,9 +324,36 @@ function renderReminders(categoryFilter = 'all') {
   const remindersList = document.getElementById('reminders-list');
   if (!remindersList) return;
   
+  // Load reminders if not already loaded
+  if (!reminders || reminders.length === 0) {
+    loadReminders();
+  }
+  
   // Filter reminders by category
   let filteredReminders = reminders;
   if (categoryFilter !== 'all') {
+    const subscription = JSON.parse(localStorage.getItem('subscription') || '{"tier": "free"}');
+    
+    // Apply category filters
+    filteredReminders = reminders.filter(reminder => {
+      switch(categoryFilter) {
+        case 'health':
+          return reminder.type === 'water' || reminder.type === 'pomodoro';
+        case 'birthday':
+          // Check subscription limit for birthday reminders
+          if (subscription.tier === 'free' && categoryFilter === 'birthday') {
+            return reminder.type === 'birthday' && 
+                   reminders.filter(r => r.type === 'birthday').indexOf(reminder) < 3;
+          }
+          return reminder.type === 'birthday';
+        case 'social':
+          return reminder.type === 'socialization';
+        case 'other':
+          return !['water', 'pomodoro', 'birthday', 'socialization'].includes(reminder.type);
+        default:
+          return true;
+      }
+    });
     filteredReminders = reminders.filter(reminder => {
       switch(categoryFilter) {
         case 'health':

@@ -17,23 +17,19 @@
     </header>
 
     <main id="main-content">
-      <div class="tasks-container">
-        <div class="task-header">
-          <h2 class="tab-section-title">My Tasks</h2>
-          <div class="task-tabs">
-            <button class="task-tab active" data-tab="todo">To Do</button>
-            <button class="task-tab" data-tab="done">Done</button>
-            <button class="task-tab" data-tab="metrics">Metrics</button>
+      <div class="tab-content active" data-tab="tasks">
+        <div class="tasks-container">
+          <div class="task-header">
+            <h2 class="tab-section-title">My Tasks</h2>
+            <div class="task-tabs">
+              <button class="task-tab active" data-tab="todo">To Do</button>
+              <button class="task-tab" data-tab="done">Done</button>
+              <button class="task-tab" data-tab="metrics">Metrics</button>
+            </div>
           </div>
-        </div>
-        <div class="task-list" id="task-list-todo">
-          <!-- To Do tasks will be added here -->
-        </div>
-        <div class="task-list" id="task-list-done" style="display:none;">
-          <!-- Done tasks will be added here -->
-        </div>
-        <div class="task-list" id="task-list-metrics" style="display:none;">
-          <!-- Metrics will be added here -->
+          <div class="task-list" id="task-list">
+            <!-- Tasks will be added here -->
+          </div>
         </div>
       </div>
     </main>
