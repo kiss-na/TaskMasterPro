@@ -79,49 +79,7 @@ let reminders = [
     frequency: 'yearly',
     date: '2025-05-15',
     time: '09:00',
-    isEnabled: true,
-    phoneNumber: '+1234567890'
-  },
-  {
-    id: '4',
-    title: 'Team Meeting',
-    description: 'Weekly sync with the development team',
-    type: 'socialization',
-    frequency: 'weekly',
-    times: ['14:00'],
-    weekdays: [2], // Tuesday
     isEnabled: true
-  },
-  {
-    id: '5',
-    title: 'Brother\'s Birthday',
-    description: 'Get gaming gift card',
-    type: 'birthday',
-    frequency: 'yearly',
-    date: '2025-08-20',
-    time: '10:00',
-    isEnabled: true,
-    phoneNumber: '+0987654321'
-  },
-  {
-    id: '6',
-    title: 'Exercise',
-    description: 'Morning workout routine',
-    type: 'custom',
-    frequency: 'daily',
-    times: ['07:00'],
-    isEnabled: true
-  },
-  {
-    id: '7',
-    title: 'Friend\'s Birthday',
-    description: 'Plan surprise party',
-    type: 'birthday',
-    frequency: 'yearly',
-    date: '2025-09-10',
-    time: '11:00',
-    isEnabled: true,
-    phoneNumber: '+1122334455'
   }
 ];
 
