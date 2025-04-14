@@ -1,4 +1,5 @@
-modules = ["flutter", "dart", "python-3.11", "nodejs-20"]
+modules = ["nodejs-20", "web", "java-graalvm22.3", "python-3.11"]
+run = "node index.js"
 
 [nix]
 channel = "stable-24_05"
@@ -50,7 +51,7 @@ args = "cd static_web && python3 -m http.server 5000"
 waitForPort = 5000
 
 [deployment]
-run = ["sh", "-c", "flutter run -d web-server --web-port=5000 --web-hostname=0.0.0.0 -t lib/simple_web_app.dart"]
+run = ["sh", "-c", "node index.js"]
 
 [[ports]]
 localPort = 5000
