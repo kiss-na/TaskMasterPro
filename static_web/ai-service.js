@@ -1,68 +1,87 @@
 /**
  * AI Service Module
- * Provides integration with AI services for natural language processing
- * Uses either OpenAI or Anthropic APIs based on available credentials
+ * Provides integration with AI services and subscription management
  */
 
 class AIService {
   constructor() {
-    this.serviceType = 'basic'; // 'basic', 'openai', or 'anthropic'
-    this.initialized = false;
+    this.subscriptionTiers = {
+      free: {
+        calendarSyncs: 1,
+        birthdayReminders: 3,
+        hasAIAssistant: false,
+        hasAdvancedAnalytics: false,
+        morningCheck: false
+      },
+      premium: {
+        calendarSyncs: -1, // unlimited
+        birthdayReminders: -1, // unlimited
+        hasAIAssistant: true,
+        hasAdvancedAnalytics: true,
+        morningCheck: true,
+        price: 5
+      }
+    };
+
+    this.paymentMethods = [
+      { id: 'card', name: 'Credit/Debit Card' },
+      { id: 'skrill', name: 'Skrill' },
+      { id: 'esewa', name: 'eSewa' },
+      { id: 'paypal', name: 'PayPal' }
+    ];
+
+    this.categories = {
+      health: ['doctor', 'medicine', 'exercise', 'workout', 'gym'],
+      birthday: ['birthday', 'celebration', 'party', 'anniversary'],
+      social: ['meeting', 'call', 'hangout', 'dinner', 'lunch'],
+      other: ['custom', 'misc', 'general', 'task']
+    };
+
     this.initializeService();
   }
-  
+
   async initializeService() {
-    // In a production environment, we would check for API keys here
-    // For the demo, we'll use the basic built-in NLP implemented in ai-assistant.js
     this.serviceType = 'basic';
     this.initialized = true;
-    console.log('AI Service initialized in basic mode');
-    
-    // For production, uncomment the following to check for API keys
-    /*
-    // Check if OpenAI API key is available
-    try {
-      const openAiKeyAvailable = await this.checkOpenAIKey();
-      if (openAiKeyAvailable) {
-        this.serviceType = 'openai';
-        this.initialized = true;
-        console.log('AI Service initialized with OpenAI');
-        return;
-      }
-    } catch (error) {
-      console.error('Error checking OpenAI API key:', error);
+    console.log('AI Service initialized with subscription management');
+  }
+
+  async processSubscription(method, tier) {
+    // Payment processing logic would go here
+    return { success: true, message: 'Subscription activated' };
+  }
+
+  async performMorningCheck() {
+    const subscription = JSON.parse(localStorage.getItem('subscription') || '{"tier": "free"}');
+    if (subscription.tier !== 'premium') {
+      return 'Upgrade to Premium to access AI morning check!';
     }
-    
-    // Check if Anthropic API key is available
-    try {
-      const anthropicKeyAvailable = await this.checkAnthropicKey();
-      if (anthropicKeyAvailable) {
-        this.serviceType = 'anthropic';
-        this.initialized = true;
-        console.log('AI Service initialized with Anthropic');
-        return;
-      }
-    } catch (error) {
-      console.error('Error checking Anthropic API key:', error);
+
+    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    const today = new Date().toISOString().split('T')[0];
+
+    const todaysTasks = tasks.filter(task => task.dueDate === today);
+    const priorityTasks = todaysTasks.filter(task => task.priority === 'high');
+    const meetings = todaysTasks.filter(task => task.isEvent);
+
+    return this.formatMorningSummary(priorityTasks, meetings);
+  }
+
+  formatMorningSummary(priorityTasks, meetings) {
+    let summary = `Good morning! Here's your day:\n\n`;
+
+    if (priorityTasks.length > 0) {
+      summary += `🚨 Priority Tasks:\n`;
+      priorityTasks.forEach(task => summary += `- ${task.title}\n`);
     }
-    
-    // If no API keys are available, fall back to basic mode
-    this.serviceType = 'basic';
-    this.initialized = true;
-    console.log('AI Service initialized in basic mode (fallback)');
-    */
+
+    if (meetings.length > 0) {
+      summary += `\n📅 Today's Meetings:\n`;
+      meetings.forEach(meeting => summary += `- ${meeting.title} at ${meeting.time}\n`);
+    }
+
+    return summary;
   }
-  
-  async checkOpenAIKey() {
-    // In production, make a small test call to the OpenAI API to verify the key
-    return false;
-  }
-  
-  async checkAnthropicKey() {
-    // In production, make a small test call to the Anthropic API to verify the key
-    return false;
-  }
-  
   async processCommand(command) {
     // Wait for initialization to complete
     if (!this.initialized) {
@@ -89,7 +108,7 @@ class AIService {
         return this.processWithBasicNLP(command);
     }
   }
-  
+
   async processWithOpenAI(command) {
     // In production, this would make an API call to OpenAI
     try {
@@ -109,7 +128,7 @@ class AIService {
       return this.processWithBasicNLP(command);
     }
   }
-  
+
   async processWithAnthropic(command) {
     // In production, this would make an API call to Anthropic
     try {
@@ -129,18 +148,18 @@ class AIService {
       return this.processWithBasicNLP(command);
     }
   }
-  
+
   processWithBasicNLP(command) {
     // Basic NLP implementation (same logic as in AI Assistant)
     command = command.toLowerCase();
-    
+
     let intent = {
       action: null,
       entityType: null,
       details: {},
       originalCommand: command
     };
-    
+
     // Determine action and entity type
     if (command.includes('add') || command.includes('create') || command.includes('new')) {
       intent.action = 'create';
@@ -157,7 +176,7 @@ class AIService {
       // Default to search if no action is detected
       intent.action = 'search';
     }
-    
+
     // Determine entity type
     if (!intent.entityType) {
       if (command.includes('task')) {
@@ -173,7 +192,7 @@ class AIService {
         intent.entityType = 'task';
       }
     }
-    
+
     // Extract priority if mentioned
     if (command.includes('high priority') || command.includes('important')) {
       intent.details.priority = 'high';
@@ -182,7 +201,7 @@ class AIService {
     } else if (command.includes('low priority')) {
       intent.details.priority = 'low';
     }
-    
+
     // Extract date information
     const dateKeywords = [
       { keyword: 'today', days: 0 },
@@ -190,7 +209,7 @@ class AIService {
       { keyword: 'next week', days: 7 },
       { keyword: 'next month', days: 30 }
     ];
-    
+
     for (const dateInfo of dateKeywords) {
       if (command.includes(dateInfo.keyword)) {
         const date = new Date();
@@ -199,7 +218,7 @@ class AIService {
         break;
       }
     }
-    
+
     // Extract day of week
     const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     for (let i = 0; i < dayNames.length; i++) {
@@ -208,27 +227,27 @@ class AIService {
         const targetDay = i;
         let daysToAdd = targetDay - today;
         if (daysToAdd <= 0) daysToAdd += 7; // Next week if the day has passed
-        
+
         const date = new Date();
         date.setDate(date.getDate() + daysToAdd);
         intent.details.date = date.toISOString().split('T')[0];
         break;
       }
     }
-    
+
     // Extract title/content based on the context
     // This is a simplified approach - a real AI would do better
     if (intent.action === 'create' || intent.action === 'update') {
       const prepositions = ['to', 'about', 'for', 'with', 'on'];
       let contentStart = -1;
-      
+
       for (const prep of prepositions) {
         const prepIndex = command.indexOf(` ${prep} `);
         if (prepIndex !== -1 && (contentStart === -1 || prepIndex < contentStart)) {
           contentStart = prepIndex + prep.length + 2;
         }
       }
-      
+
       if (contentStart !== -1) {
         intent.details.title = command.substring(contentStart).trim();
       } else {
@@ -239,15 +258,15 @@ class AIService {
         }
       }
     }
-    
+
     // If search action, extract search terms
     if (intent.action === 'search') {
       intent.details.searchTerms = command;
     }
-    
+
     return intent;
   }
-  
+
   // For potential voice transcription
   async transcribeAudio(audioBlob) {
     // In a production implementation, this would use an API like OpenAI's Whisper
@@ -256,76 +275,12 @@ class AIService {
   }
 }
 
-class AIService {
-  constructor() {
-    this.subscriptionTiers = {
-      free: {
-        calendarSyncs: 1,
-        birthdayReminders: 3,
-        hasAIAssistant: false,
-        hasAdvancedAnalytics: false
-      },
-      premium: {
-        calendarSyncs: -1, // unlimited
-        birthdayReminders: -1, // unlimited
-        hasAIAssistant: true,
-        hasAdvancedAnalytics: true,
-        price: 5
-      }
-    };
-
-    this.categories = {
-      work: ['meeting', 'project', 'deadline', 'presentation', 'client'],
-      health: ['doctor', 'medicine', 'exercise', 'workout', 'gym'],
-      grocery: ['buy', 'shopping', 'store', 'milk', 'food'],
-      social: ['call', 'meet', 'party', 'birthday', 'hangout']
-    };
-    console.log('AI Service initialized with NLP capabilities');
-  }
-
-  detectCategory(text) {
-    for (const [category, keywords] of Object.entries(this.categories)) {
-      if (keywords.some(keyword => text.toLowerCase().includes(keyword))) {
-        return category;
-      }
-    }
-    return 'other';
-  }
-
-  extractDateTime(text) {
-    const dateTimeRegex = {
-      today: /today/i,
-      tomorrow: /tomorrow/i,
-      nextWeek: /next week/i,
-      specificTime: /at (\d{1,2}(?::\d{2})?\s*(?:am|pm))/i,
-      specificDate: /on ([a-z]+day)/i
-    };
-
-    const result = { date: null, time: null };
-    
-    if (dateTimeRegex.today.test(text)) {
-      result.date = new Date().toISOString().split('T')[0];
-    } else if (dateTimeRegex.tomorrow.test(text)) {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      result.date = tomorrow.toISOString().split('T')[0];
-    }
-
-    const timeMatch = text.match(dateTimeRegex.specificTime);
-    if (timeMatch) {
-      result.time = timeMatch[1];
-    }
-
-    return result;
-  }
-}
-
 // Initialize the AI Service when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   if (document.querySelector('.ai-service-container')) {
     // Initialize the AI Service
     const aiService = new AIService();
-    
+
     // Make it available globally
     window.aiService = aiService;
   }
