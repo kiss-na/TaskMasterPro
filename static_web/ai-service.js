@@ -258,7 +258,49 @@ class AIService {
 
 class AIService {
   constructor() {
-    console.log('AI Service initialized in basic mode');
+    this.categories = {
+      work: ['meeting', 'project', 'deadline', 'presentation', 'client'],
+      health: ['doctor', 'medicine', 'exercise', 'workout', 'gym'],
+      grocery: ['buy', 'shopping', 'store', 'milk', 'food'],
+      social: ['call', 'meet', 'party', 'birthday', 'hangout']
+    };
+    console.log('AI Service initialized with NLP capabilities');
+  }
+
+  detectCategory(text) {
+    for (const [category, keywords] of Object.entries(this.categories)) {
+      if (keywords.some(keyword => text.toLowerCase().includes(keyword))) {
+        return category;
+      }
+    }
+    return 'other';
+  }
+
+  extractDateTime(text) {
+    const dateTimeRegex = {
+      today: /today/i,
+      tomorrow: /tomorrow/i,
+      nextWeek: /next week/i,
+      specificTime: /at (\d{1,2}(?::\d{2})?\s*(?:am|pm))/i,
+      specificDate: /on ([a-z]+day)/i
+    };
+
+    const result = { date: null, time: null };
+    
+    if (dateTimeRegex.today.test(text)) {
+      result.date = new Date().toISOString().split('T')[0];
+    } else if (dateTimeRegex.tomorrow.test(text)) {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      result.date = tomorrow.toISOString().split('T')[0];
+    }
+
+    const timeMatch = text.match(dateTimeRegex.specificTime);
+    if (timeMatch) {
+      result.time = timeMatch[1];
+    }
+
+    return result;
   }
 }
 

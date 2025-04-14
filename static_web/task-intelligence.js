@@ -82,10 +82,44 @@ const TaskIntelligence = {
     // Set up event listeners
     this.setupEventListeners();
     
-    console.log('Task Intelligence initialized');
+    // Initialize proactive suggestions
+    this.setupProactiveSuggestions();
+    
+    console.log('Task Intelligence initialized with proactive suggestions');
     
     // Run initial analysis on existing tasks
     this.analyzeExistingTasks();
+  },
+
+  setupProactiveSuggestions: function() {
+    setInterval(() => {
+      const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+      
+      // Check for overdue tasks
+      const overdueTasks = tasks.filter(task => 
+        new Date(task.dueDate) < new Date() && !task.completed
+      );
+      
+      if (overdueTasks.length > 0) {
+        this.showSuggestionsNotification(
+          `You have ${overdueTasks.length} overdue task(s). Would you like to reschedule?`
+        );
+      }
+      
+      // Analyze task completion patterns
+      const completedTasks = tasks.filter(task => task.completed);
+      if (completedTasks.length >= 5) {
+        const morningTasks = completedTasks.filter(task => 
+          new Date(task.completedAt).getHours() < 12
+        );
+        
+        if (morningTasks.length / completedTasks.length > 0.7) {
+          this.showSuggestionsNotification(
+            "You're more productive in the mornings! Consider scheduling important tasks before noon."
+          );
+        }
+      }
+    }, 1800000); // Check every 30 minutes
   },
   
   // Load custom tags from localStorage
