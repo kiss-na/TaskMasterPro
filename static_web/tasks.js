@@ -200,18 +200,8 @@ function renderTasks(activeTab = 'todo') {
   const taskList = document.getElementById('task-list');
   if (!taskList) return;
 
-  // Only show class-related tasks
-  let filteredTasks = tasks.filter(task => task.category === 'education');
-
-  // Further filter based on active tab
-  if (activeTab === 'todo') {
-    filteredTasks = filteredTasks.filter(task => !task.isCompleted);
-  } else if (activeTab === 'done') {
-    filteredTasks = filteredTasks.filter(task => task.isCompleted);
-  } else if (activeTab === 'metrics') {
-    renderMetrics(filteredTasks);
-    return;
-  }
+  // Filter tasks based on active tab
+  let filteredTasks = tasks;
   if (activeTab === 'todo') {
     filteredTasks = tasks.filter(task => !task.isCompleted);
   } else if (activeTab === 'done') {
