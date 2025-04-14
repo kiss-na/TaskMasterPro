@@ -266,14 +266,18 @@ function formatTime(timeStr) {
 }
 
 // Format date for display
-function formatDate(dateStr) {
-  if (!dateStr) return '';
+function formatDate(dateInput) {
+  if (!dateInput) return '';
   
   try {
-    const date = new Date(dateStr);
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    if (!(date instanceof Date) || isNaN(date)) {
+      return typeof dateInput === 'string' ? dateInput : '';
+    }
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   } catch (e) {
-    return dateStr;
+    console.error('Date formatting error:', e);
+    return typeof dateInput === 'string' ? dateInput : '';
   }
 }
 
@@ -636,9 +640,12 @@ function filterRemindersByType(e) {
 }
 
 // Initialize reminders
-document.addEventListener('DOMContentLoaded', function() {
+function initializeReminders() {
   const remindersTab = document.querySelector('.tab-content[data-tab="reminders"]');
-  if (remindersTab) {
+  if (!remindersTab) return;
+  
+  // Clear existing content
+  remindersTab.innerHTML = '';
     // Create type filter options
     let filterOptionsHTML = '<option value="all">All Types</option>';
     Object.entries(REMINDER_TYPES).forEach(([key, type]) => {

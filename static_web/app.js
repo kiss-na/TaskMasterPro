@@ -88,9 +88,16 @@ function initFAB() {
 
 // Render the active tab content
 function renderActiveTab() {
-  // Create tab content containers if they don't exist
   const mainContent = document.getElementById('main-content');
+  if (!mainContent) return;
+
+  // Create tab content containers if they don't exist
   const existingTabs = mainContent.querySelectorAll('.tab-content');
+  
+  // Initialize specific tab functionality
+  if (currentTab === 'reminders' && typeof initializeReminders === 'function') {
+    initializeReminders();
+  }
   
   if (existingTabs.length === 0) {
     // Create tab content containers if none exist
