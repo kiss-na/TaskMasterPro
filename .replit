@@ -5,7 +5,7 @@ run = "node index.js"
 channel = "stable-24_05"
 
 [workflows]
-runButton = "Project"
+runButton = "Flutter Development"
 
 [[workflows.workflow]]
 name = "Project"
@@ -59,8 +59,18 @@ mode = "sequential"
 task = "shell.exec"
 args = "python server.py"
 
+[[workflows.workflow]]
+name = "Flutter Development"
+author = 41461236
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flutter run -d web-server --web-port 5000 --web-hostname 0.0.0.0"
+
 [deployment]
-run = ["sh", "-c", "node index.js"]
+run = ["sh", "-c", "flutter run -d web-server --web-port 5000 --web-hostname 0.0.0.0"]
+build = ["sh", "-c", "flutter build web"]
 
 [[ports]]
 localPort = 5000

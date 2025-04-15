@@ -31,9 +31,9 @@ android {
     signingConfigs {
         release {
             keyAlias 'upload'
-            keyPassword 'your-key-password'
+            keyPassword 'kissna'
             storeFile file('upload-keystore.jks')
-            storePassword 'your-store-password'
+            storePassword 'kissna'
         }
     }
 
