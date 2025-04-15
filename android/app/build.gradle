@@ -18,12 +18,14 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.example.task_manager"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 33
+    flutter.compileSdkVersion
 
     defaultConfig {
         applicationId "com.example.task_manager"
         minSdkVersion 21
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 33
+        flutter.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
     }
