@@ -302,3 +302,82 @@ class HabitReminderAdapter extends TypeAdapter<HabitReminder> {
     writer.writeBool(obj.isEnabled);
   }
 }
+import 'package:hive/hive.dart';
+import 'task.dart';
+import 'note.dart';
+import 'reminder.dart';
+
+class TaskAdapter extends TypeAdapter<Task> {
+  @override
+  final typeId = 1;
+
+  @override
+  Task read(BinaryReader reader) {
+    return Task(
+      id: reader.read(),
+      title: reader.read(),
+      description: reader.read(),
+      dueDate: reader.read(),
+      isCompleted: reader.read(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Task obj) {
+    writer.write(obj.id);
+    writer.write(obj.title);
+    writer.write(obj.description);
+    writer.write(obj.dueDate);
+    writer.write(obj.isCompleted);
+  }
+}
+
+class NoteAdapter extends TypeAdapter<Note> {
+  @override
+  final typeId = 2;
+
+  @override
+  Note read(BinaryReader reader) {
+    return Note(
+      id: reader.read(),
+      title: reader.read(),
+      content: reader.read(),
+      createdAt: reader.read(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Note obj) {
+    writer.write(obj.id);
+    writer.write(obj.title);
+    writer.write(obj.content);
+    writer.write(obj.createdAt);
+  }
+}
+
+class ReminderAdapter extends TypeAdapter<Reminder> {
+  @override
+  final typeId = 3;
+
+  @override
+  Reminder read(BinaryReader reader) {
+    return Reminder(
+      id: reader.read(),
+      title: reader.read(),
+      description: reader.read(),
+      type: reader.read(),
+      frequency: reader.read(),
+      times: reader.read(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Reminder obj) {
+    writer.write(obj.id);
+    writer.write(obj.title);
+    writer.write(obj.description);
+    writer.write(obj.type);
+    writer.write(obj.frequency);
+    writer.write(obj.times);
+  }
+}

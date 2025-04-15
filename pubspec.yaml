@@ -15,8 +15,8 @@ dependencies:
   hive_flutter: ^1.1.0
   table_calendar: ^3.0.9
   flutter_colorpicker: ^1.0.3
-  clean_nepali_calendar: ^2.0.1
-  flutter_quill: ^7.2.0
+  clean_nepali_calendar: ^2.0.2
+  flutter_quill: ^8.6.4
   cached_network_image: ^3.2.3
   intl: ^0.18.1
   uuid: ^3.0.7
