@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  clean_nepali_calendar:
+    dependency: "direct main"
+    description:
+      name: clean_nepali_calendar
+      sha256: e656032a90407db0b58ecc93a787639235dbbac0935861434d8a9dc8887b62fe
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   clock:
     dependency: transitive
     description:

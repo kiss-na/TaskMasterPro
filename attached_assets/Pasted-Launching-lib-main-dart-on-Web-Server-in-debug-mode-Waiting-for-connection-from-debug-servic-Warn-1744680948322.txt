@@ -1,0 +1,998 @@
+Launching lib/main.dart on Web Server in debug mode...
+Waiting for connection from debug servic
+Warning: In index.html:24: Local
+variable for "serviceWorkerVersion" is
+deprecated. Use
+"{{flutter_service_worker_version}}"
+template token instead.
+Waiting for connection from debug servic
+Warning: In index.html:34:
+"FlutterLoader.loadEntrypoint" is
+deprecated. Use "FlutterLoader.load"
+instead.
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/raw_editor/raw
+_editor.dart:294:7: Error: The
+non-abstract class 'RawEditorState' is
+missing implementations for these
+members:
+Waiting for connection from debug servic
+ - TextSelectionDelegate.lookUpEnabled
+Waiting for connection from debug servic
+ -
+ TextSelectionDelegate.searchWebEnabled
+Waiting for connection from debug servic
+ - TextSelectionDelegate.shareEnabled
+Waiting for connection from debug servic
+Try to either
+Waiting for connection from debug servic
+ - provide an implementation,
+Waiting for connection from debug servic
+ - inherit an implementation from a
+ superclass or mixin,
+Waiting for connection from debug servic
+ - mark the class as abstract, or
+Waiting for connection from debug servic
+ - provide a 'noSuchMethod'
+ implementation.
+Waiting for connection from debug servic
+
+Waiting for connection from debug servic
+class RawEditorState extends EditorState
+Waiting for connection from debug servic
+      ^^^^^^^^^^^^^^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/services/text_inpu
+t.dart:1097:12: Context:
+'TextSelectionDelegate.lookUpEnabled' is
+defined here.
+Waiting for connection from debug servic
+  bool get lookUpEnabled => true;
+Waiting for connection from debug servic
+           ^^^^^^^^^^^^^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/services/text_inpu
+t.dart:1100:12: Context:
+'TextSelectionDelegate.searchWebEnabled'
+is defined here.
+Waiting for connection from debug servic
+  bool get searchWebEnabled => true;
+Waiting for connection from debug servic
+           ^^^^^^^^^^^^^^^^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/services/text_inpu
+t.dart:1103:12: Context:
+'TextSelectionDelegate.shareEnabled' is
+defined here.
+Waiting for connection from debug servic
+  bool get shareEnabled => true;
+Waiting for connection from debug servic
+           ^^^^^^^^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/quill_single_c
+hild_scroll_view.dart:289:18: Error: The
+method
+'_RenderSingleChildViewport.getOffsetToR
+eveal' has fewer named arguments than
+those of overridden method
+'RenderAbstractViewport.getOffsetToRevea
+l'.
+Waiting for connection from debug servic
+  RevealedOffset
+  getOffsetToReveal(RenderObject target,
+  double alignment,
+Waiting for connection from debug servic
+                 ^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/rendering/viewport
+.dart:126:18: Context: This is the
+overridden method ('getOffsetToReveal').
+Waiting for connection from debug servic
+  RevealedOffset getOffsetToReveal(
+Waiting for connection from debug servic
+                 ^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/quill_single_c
+hild_scroll_view.dart:289:18: Error: The
+method
+'_RenderSingleChildViewport.getOffsetToR
+eveal' doesn't have the named parameter
+'axis' of overridden method
+'RenderAbstractViewport.getOffsetToRevea
+l'.
+Waiting for connection from debug servic
+  RevealedOffset
+  getOffsetToReveal(RenderObject target,
+  double alignment,
+Waiting for connection from debug servic
+                 ^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/rendering/viewport
+.dart:126:18: Context: This is the
+overridden method ('getOffsetToReveal').
+Waiting for connection from debug servic
+  RevealedOffset getOffsetToReveal(
+Waiting for connection from debug servic
+                 ^
+Waiting for connection from debug servic
+lib/main.dart:16:24: Error: Method not
+found: 'TaskAdapter'.
+Waiting for connection from debug servic
+  Hive.registerAdapter(TaskAdapter());
+Waiting for connection from debug servic
+                       ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/main.dart:17:24: Error: Method not
+found: 'NoteAdapter'.
+Waiting for connection from debug servic
+  Hive.registerAdapter(NoteAdapter());
+Waiting for connection from debug servic
+                       ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/main.dart:18:24: Error: Method not
+found: 'ReminderAdapter'.
+Waiting for connection from debug servic
+  Hive.registerAdapter(ReminderAdapter()
+  );
+Waiting for connection from debug servic
+                       ^^^^^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/home_screen.dar
+t:276:52: Error: Undefined name
+'TaskPriority'.
+Waiting for connection from debug servic
+                    const
+                    LoadTasksByPriorityE
+                    vent(TaskPriority.hi
+                    gh),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^
+Waiting for connection from debug servic
+lib/presentation/screens/home_screen.dar
+t:290:52: Error: Undefined name
+'TaskPriority'.
+Waiting for connection from debug servic
+                    const
+                    LoadTasksByPriorityE
+                    vent(TaskPriority.me
+                    dium),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^
+Waiting for connection from debug servic
+lib/presentation/screens/home_screen.dar
+t:304:52: Error: Undefined name
+'TaskPriority'.
+Waiting for connection from debug servic
+                    const
+                    LoadTasksByPriorityE
+                    vent(TaskPriority.lo
+                    w),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^
+Waiting for connection from debug servic
+lib/presentation/screens/home_screen.dar
+t:318:21: Error: 'LoadTasksForDateEvent'
+is imported from both
+'package:task_manager/presentation/blocs
+/calendar/calendar_event.dart' and
+'package:task_manager/presentation/blocs
+/task/task_event.dart'.
+Waiting for connection from debug servic
+                    LoadTasksForDateEven
+                    t(DateTime.now()),
+Waiting for connection from debug servic
+                    ^^^^^^^^^^^^^^^^^^^^
+                    ^
+Waiting for connection from debug servic
+lib/presentation/screens/calendar/calend
+ar_screen.dart:39:38: Error:
+'LoadTasksForDateEvent' is imported from
+both
+'package:task_manager/presentation/blocs
+/calendar/calendar_event.dart' and
+'package:task_manager/presentation/blocs
+/task/task_event.dart'.
+Waiting for connection from debug servic
+    context.read<CalendarBloc>().add(Loa
+    dTasksForDateEvent(_selectedDate));
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^^^^^^
+                              ^
+Waiting for connection from debug servic
+lib/presentation/screens/calendar/calend
+ar_screen.dart:50:38: Error:
+'LoadTasksForDateEvent' is imported from
+both
+'package:task_manager/presentation/blocs
+/calendar/calendar_event.dart' and
+'package:task_manager/presentation/blocs
+/task/task_event.dart'.
+Waiting for connection from debug servic
+    context.read<CalendarBloc>().add(Loa
+    dTasksForDateEvent(date));
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^^^^^^
+                              ^
+Waiting for connection from debug servic
+lib/presentation/screens/calendar/calend
+ar_screen.dart:170:39: Error:
+'TaskState' isn't a type.
+Waiting for connection from debug servic
+                BlocBuilder<TaskBloc,
+                TaskState>(
+Waiting for connection from debug servic
+                              ^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/calendar/calend
+ar_screen.dart:172:38: Error:
+'UpcomingTasksLoadedState' isn't a type.
+Waiting for connection from debug servic
+                    if (taskState is
+                    UpcomingTasksLoadedS
+                    tate) {
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^^^^^^
+                              ^^^^
+Waiting for connection from debug servic
+lib/data/repositories/reminder_repositor
+y.dart:36:53: Error: The argument type
+'Reminder' can't be assigned to the
+parameter type 'HabitReminder'.
+Waiting for connection from debug servic
+ - 'Reminder' is from
+ 'package:task_manager/data/models/remin
+ der.dart'
+ ('lib/data/models/reminder.dart').
+Waiting for connection from debug servic
+ - 'HabitReminder' is from
+ 'package:task_manager/data/models/remin
+ der.dart'
+ ('lib/data/models/reminder.dart').
+Waiting for connection from debug servic
+      await
+      NotificationUtils.scheduleHabitRem
+      inder(reminder);
+Waiting for connection from debug servic
+                              ^
+Waiting for connection from debug servic
+lib/data/repositories/reminder_repositor
+y.dart:51:59: Error: The argument type
+'Reminder' can't be assigned to the
+parameter type 'HabitReminder'.
+Waiting for connection from debug servic
+ - 'Reminder' is from
+ 'package:task_manager/data/models/remin
+ der.dart'
+ ('lib/data/models/reminder.dart').
+Waiting for connection from debug servic
+ - 'HabitReminder' is from
+ 'package:task_manager/data/models/remin
+ der.dart'
+ ('lib/data/models/reminder.dart').
+Waiting for connection from debug servic
+            await
+            NotificationUtils.scheduleHa
+            bitReminder(reminder);
+Waiting for connection from debug servic
+                              ^
+Waiting for connection from debug servic
+lib/presentation/widgets/calendar/calend
+ar_widget.dart:113:22: Error:
+'CalendarStyle' is imported from both
+'package:clean_nepali_calendar/clean_nep
+ali_calendar.dart' and
+'package:table_calendar/src/customizatio
+n/calendar_style.dart'.
+Waiting for connection from debug servic
+      calendarStyle: CalendarStyle(
+Waiting for connection from debug servic
+                     ^^^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/widgets/calendar/calend
+ar_widget.dart:128:20: Error:
+'HeaderStyle' is imported from both
+'package:clean_nepali_calendar/clean_nep
+ali_calendar.dart' and
+'package:table_calendar/src/customizatio
+n/header_style.dart'.
+Waiting for connection from debug servic
+      headerStyle: HeaderStyle(
+Waiting for connection from debug servic
+                   ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/widgets/calendar/calend
+ar_widget.dart:157:20: Error:
+'HeaderStyle' is imported from both
+'package:clean_nepali_calendar/clean_nep
+ali_calendar.dart' and
+'package:table_calendar/src/customizatio
+n/header_style.dart'.
+Waiting for connection from debug servic
+      headerStyle: HeaderStyle(
+Waiting for connection from debug servic
+                   ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/widgets/calendar/calend
+ar_widget.dart:150:7: Error: No named
+parameter with the name 'events'.
+Waiting for connection from debug servic
+      events: widget.tasks?.where((task)
+      => task.dueDate != null).map(
+Waiting for connection from debug servic
+      ^^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/clean_nepal
+i_calendar-2.0.1/lib/src/nepali_calendar
+.dart:20:9: Context: Found this
+candidate, but the arguments don't
+match.
+Waiting for connection from debug servic
+  const CleanNepaliCalendar({
+Waiting for connection from debug servic
+        ^^^^^^^^^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/widgets/calendar/calend
+ar_widget.dart:221:31: Error: The method
+'dispose' isn't defined for the class
+'NepaliCalendarController'.
+Waiting for connection from debug servic
+ - 'NepaliCalendarController' is from
+ 'package:clean_nepali_calendar/clean_ne
+ pali_calendar.dart'
+ ('../.pub-cache/hosted/pub.dev/clean_ne
+ pali_calendar-2.0.1/lib/clean_nepali_ca
+ lendar.dart').
+Waiting for connection from debug servic
+Try correcting the name to the name of
+an existing method, or defining a method
+named 'dispose'.
+Waiting for connection from debug servic
+    _nepaliCalendarController.dispose();
+Waiting for connection from debug servic
+                              ^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/widgets/note/note_grid_
+item.dart:102:9: Error: No named
+parameter with the name 'controller'.
+Waiting for connection from debug servic
+        controller: QuillController(
+Waiting for connection from debug servic
+        ^^^^^^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/editor/editor.
+dart:145:9: Context: Found this
+candidate, but the arguments don't
+match.
+Waiting for connection from debug servic
+  const QuillEditor({
+Waiting for connection from debug servic
+        ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/note/add_edit_n
+ote_screen.dart:80:34: Error: Member not
+found: 'Document.fromPlainText'.
+Waiting for connection from debug servic
+        document:
+        quill.Document.fromPlainText(not
+        e.content),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^
+Waiting for connection from debug servic
+lib/presentation/screens/note/add_edit_n
+ote_screen.dart:165:39: Error: Couldn't
+find constructor 'VerticalSpacing'.
+Waiting for connection from debug servic
+                              const
+                              VerticalSp
+                              acing(16,
+                              0),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/note/add_edit_n
+ote_screen.dart:166:39: Error: Couldn't
+find constructor 'VerticalSpacing'.
+Waiting for connection from debug servic
+                              const
+                              VerticalSp
+                              acing(0,
+                              0),
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/note/add_edit_n
+ote_screen.dart:150:29: Error: No named
+parameter with the name 'controller'.
+Waiting for connection from debug servic
+                            controller:
+                            _contentCont
+                            roller,
+Waiting for connection from debug servic
+                            ^^^^^^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/editor/editor.
+dart:145:9: Context: Found this
+candidate, but the arguments don't
+match.
+Waiting for connection from debug servic
+  const QuillEditor({
+Waiting for connection from debug servic
+        ^^^^^^^^^^^
+Waiting for connection from debug servic
+lib/presentation/screens/note/add_edit_n
+ote_screen.dart:176:38: Error: Member
+not found: 'QuillToolbar.basic'.
+Waiting for connection from debug servic
+                  quill.QuillToolbar.bas
+                  ic(
+Waiting for connection from debug servic
+                              ^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/clean_nepal
+i_calendar-2.0.1/lib/src/days_view.dart:
+136:54: Error: The getter 'caption'
+isn't defined for the class 'TextTheme'.
+Waiting for connection from debug servic
+ - 'TextTheme' is from
+ 'package:flutter/src/material/text_them
+ e.dart'
+ ('/nix/store/yk06k2xi481mkz7lbnqip2178l
+ 547ihl-flutter-wrapped-3.22.0-sdk-links
+ /packages/flutter/lib/src/material/text
+ _theme.dart').
+Waiting for connection from debug servic
+Try correcting the name to the name of
+an existing getter, or defining a getter
+or field named 'caption'.
+Waiting for connection from debug servic
+        _getDayHeaders(language,
+        themeData.textTheme.caption,
+        headerDayType,
+Waiting for connection from debug servic
+                              ^^^^^^^
+Waiting for connection from debug servic
+../.pub-cache/hosted/pub.dev/flutter_qui
+ll-7.10.2/lib/src/widgets/raw_editor/raw
+_editor.dart:362:47: Error: Required
+named parameter 'onLookUp' must be
+provided.
+Waiting for connection from debug servic
+    return
+    EditableText.getEditableButtonItems(
+Waiting for connection from debug servic
+                              ^
+Waiting for connection from debug servic
+/nix/store/yk06k2xi481mkz7lbnqip2178l547
+ihl-flutter-wrapped-3.22.0-sdk-links/pac
+kages/flutter/lib/src/widgets/editable_t
+ext.dart:1949:38: Context: Found this
+candidate, but the arguments don't
+match.
+Waiting for connection from debug servic
+  static List<ContextMenuButtonItem>
+  getEditableButtonItems({
+Waiting for connection from debug servic
+                              ^^^^^^^^^^
+                              ^^^^^^^^^^
+                              ^^
+Waiting for connection from debug servic
+Unhandled exception:
+Waiting for connection from debug servic
+Unsupported operation: Unsupported
+invalid type InvalidType(<invalid>)
+(InvalidType). Encountered while
+compiling
+file:///home/runner/workspace/lib/presen
+tation/screens/calendar/calendar_screen.
+dart, which contains the type:
+InvalidType(<invalid>).
+Waiting for connection from debug servic
+#0
+ProgramCompiler._typeCompilationError
+(package:dev_compiler/src/kernel/compile
+r.dart:3236)
+Waiting for connection from debug servic
+#1      ProgramCompiler._emitType
+(package:dev_compiler/src/kernel/compile
+r.dart:3197)
+Waiting for connection from debug servic
+#2      MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#3      MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#4      ListIterator.moveNext
+(dart:_internal/iterable.dart:354)
+Waiting for connection from debug servic
+#5
+InstantiatorGeneratorVisitor.splayNodes
+(package:dev_compiler/src/js_ast/templat
+e.dart:224)
+Waiting for connection from debug servic
+#6
+InstantiatorGeneratorVisitor.handleCallO
+rNew.<anonymous closure>
+(package:dev_compiler/src/js_ast/templat
+e.dart:604)
+Waiting for connection from debug servic
+#7      Template.instantiate
+(package:dev_compiler/src/js_ast/templat
+e.dart:118)
+Waiting for connection from debug servic
+#8      JsBuilder.call
+(package:dev_compiler/src/js_ast/builder
+.dart:212)
+Waiting for connection from debug servic
+#9
+ProgramCompiler._emitGenericClassType
+(package:dev_compiler/src/kernel/compile
+r.dart:3248)
+Waiting for connection from debug servic
+#10     ProgramCompiler._emitClassRef
+(package:dev_compiler/src/kernel/compile
+r.dart:3230)
+Waiting for connection from debug servic
+#11
+ProgramCompiler._emitConstructorName
+(package:dev_compiler/src/kernel/compile
+r.dart:3264)
+Waiting for connection from debug servic
+#12
+ProgramCompiler.visitConstructorInvocati
+on
+(package:dev_compiler/src/kernel/compile
+r.dart:6470)
+Waiting for connection from debug servic
+#13     ConstructorInvocation.accept
+(package:kernel/ast.dart:6692)
+Waiting for connection from debug servic
+#14     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#15     MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#16     ListIterator.moveNext
+(dart:_internal/iterable.dart:354)
+Waiting for connection from debug servic
+#17     new
+_GrowableList._ofEfficientLengthIterable
+(dart:core-patch/growable_array.dart:189
+)
+Waiting for connection from debug servic
+#18     new _GrowableList.of
+(dart:core-patch/growable_array.dart:150
+)
+Waiting for connection from debug servic
+#19     new List.of
+(dart:core-patch/array_patch.dart:39)
+Waiting for connection from debug servic
+#20     SetBase.toList
+(dart:collection/set.dart:119)
+Waiting for connection from debug servic
+#21
+ProgramCompiler._visitExpressionList
+(package:dev_compiler/src/kernel/compile
+r.dart:3907)
+Waiting for connection from debug servic
+#22     ProgramCompiler.visitListLiteral
+(package:dev_compiler/src/kernel/compile
+r.dart:6855)
+Waiting for connection from debug servic
+#23     ListLiteral.accept
+(package:kernel/ast.dart:8209)
+Waiting for connection from debug servic
+#24     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#25
+ProgramCompiler._emitNamedExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:6257)
+Waiting for connection from debug servic
+#26
+ProgramCompiler._emitArgumentList
+(package:dev_compiler/src/kernel/compile
+r.dart:6249)
+Waiting for connection from debug servic
+#27
+ProgramCompiler.visitConstructorInvocati
+on
+(package:dev_compiler/src/kernel/compile
+r.dart:6471)
+Waiting for connection from debug servic
+#28     ConstructorInvocation.accept
+(package:kernel/ast.dart:6692)
+Waiting for connection from debug servic
+#29     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#30
+ProgramCompiler.visitReturnStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:4631)
+Waiting for connection from debug servic
+#31     ReturnStatement.accept
+(package:kernel/ast.dart:10206)
+Waiting for connection from debug servic
+#32     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#33     MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#34     ListIterator.moveNext
+(dart:_internal/iterable.dart:354)
+Waiting for connection from debug servic
+#35     new
+_GrowableList._ofEfficientLengthIterable
+(dart:core-patch/growable_array.dart:189
+)
+Waiting for connection from debug servic
+#36     new _GrowableList.of
+(dart:core-patch/growable_array.dart:150
+)
+Waiting for connection from debug servic
+#37     new List.of
+(dart:core-patch/array_patch.dart:39)
+Waiting for connection from debug servic
+#38     SetBase.toList
+(dart:collection/set.dart:119)
+Waiting for connection from debug servic
+#39     ProgramCompiler.visitBlock
+(package:dev_compiler/src/kernel/compile
+r.dart:4034)
+Waiting for connection from debug servic
+#40     Block.accept
+(package:kernel/ast.dart:9247)
+Waiting for connection from debug servic
+#41     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#42     ProgramCompiler._visitScope
+(package:dev_compiler/src/kernel/compile
+r.dart:4620)
+Waiting for connection from debug servic
+#43     ProgramCompiler.visitIfStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:4609)
+Waiting for connection from debug servic
+#44     IfStatement.accept
+(package:kernel/ast.dart:10143)
+Waiting for connection from debug servic
+#45     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#46     ProgramCompiler._visitScope
+(package:dev_compiler/src/kernel/compile
+r.dart:4620)
+Waiting for connection from debug servic
+#47     ProgramCompiler.visitIfStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:4609)
+Waiting for connection from debug servic
+#48     IfStatement.accept
+(package:kernel/ast.dart:10143)
+Waiting for connection from debug servic
+#49     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#50     ProgramCompiler._visitScope
+(package:dev_compiler/src/kernel/compile
+r.dart:4620)
+Waiting for connection from debug servic
+#51     ProgramCompiler.visitIfStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:4609)
+Waiting for connection from debug servic
+#52     IfStatement.accept
+(package:kernel/ast.dart:10143)
+Waiting for connection from debug servic
+#53     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#54     MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#55     ListIterator.moveNext
+(dart:_internal/iterable.dart:354)
+Waiting for connection from debug servic
+#56     new
+_GrowableList._ofEfficientLengthIterable
+(dart:core-patch/growable_array.dart:189
+)
+Waiting for connection from debug servic
+#57     new _GrowableList.of
+(dart:core-patch/growable_array.dart:150
+)
+Waiting for connection from debug servic
+#58     new List.of
+(dart:core-patch/array_patch.dart:39)
+Waiting for connection from debug servic
+#59     SetBase.toList
+(dart:collection/set.dart:119)
+Waiting for connection from debug servic
+#60     ProgramCompiler.visitBlock
+(package:dev_compiler/src/kernel/compile
+r.dart:4034)
+Waiting for connection from debug servic
+#61     Block.accept
+(package:kernel/ast.dart:9247)
+Waiting for connection from debug servic
+#62     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#63
+ProgramCompiler._emitFunctionScopedBody
+(package:dev_compiler/src/kernel/compile
+r.dart:3886)
+Waiting for connection from debug servic
+#64
+ProgramCompiler._emitSyncFunctionBody.<a
+nonymous closure>
+(package:dev_compiler/src/kernel/compile
+r.dart:3592)
+Waiting for connection from debug servic
+#65     ProgramCompiler._withLetScope
+(package:dev_compiler/src/kernel/compile
+r.dart:2565)
+Waiting for connection from debug servic
+#66
+ProgramCompiler._withCurrentFunction
+(package:dev_compiler/src/kernel/compile
+r.dart:3629)
+Waiting for connection from debug servic
+#67
+ProgramCompiler._emitSyncFunctionBody
+(package:dev_compiler/src/kernel/compile
+r.dart:3588)
+Waiting for connection from debug servic
+#68     ProgramCompiler._emitFunction
+(package:dev_compiler/src/kernel/compile
+r.dart:3397)
+Waiting for connection from debug servic
+#69
+ProgramCompiler._emitArrowFunction
+(package:dev_compiler/src/kernel/compile
+r.dart:6982)
+Waiting for connection from debug servic
+#70
+ProgramCompiler.visitFunctionExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:6975)
+Waiting for connection from debug servic
+#71     FunctionExpression.accept
+(package:kernel/ast.dart:8655)
+Waiting for connection from debug servic
+#72     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#73
+ProgramCompiler._emitNamedExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:6257)
+Waiting for connection from debug servic
+#74
+ProgramCompiler._emitArgumentList
+(package:dev_compiler/src/kernel/compile
+r.dart:6249)
+Waiting for connection from debug servic
+#75
+ProgramCompiler.visitConstructorInvocati
+on
+(package:dev_compiler/src/kernel/compile
+r.dart:6471)
+Waiting for connection from debug servic
+#76     ConstructorInvocation.accept
+(package:kernel/ast.dart:6692)
+Waiting for connection from debug servic
+#77     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#78
+ProgramCompiler._emitNamedExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:6257)
+Waiting for connection from debug servic
+#79
+ProgramCompiler._emitArgumentList
+(package:dev_compiler/src/kernel/compile
+r.dart:6249)
+Waiting for connection from debug servic
+#80
+ProgramCompiler.visitConstructorInvocati
+on
+(package:dev_compiler/src/kernel/compile
+r.dart:6471)
+Waiting for connection from debug servic
+#81     ConstructorInvocation.accept
+(package:kernel/ast.dart:6692)
+Waiting for connection from debug servic
+#82     ProgramCompiler._visitExpression
+(package:dev_compiler/src/kernel/compile
+r.dart:3944)
+Waiting for connection from debug servic
+#83
+ProgramCompiler.visitReturnStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:4631)
+Waiting for connection from debug servic
+#84     ReturnStatement.accept
+(package:kernel/ast.dart:10206)
+Waiting for connection from debug servic
+#85     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#86     MappedIterable.elementAt
+(dart:_internal/iterable.dart:385)
+Waiting for connection from debug servic
+#87     ListIterator.moveNext
+(dart:_internal/iterable.dart:354)
+Waiting for connection from debug servic
+#88     new
+_GrowableList._ofEfficientLengthIterable
+(dart:core-patch/growable_array.dart:189
+)
+Waiting for connection from debug servic
+#89     new _GrowableList.of
+(dart:core-patch/growable_array.dart:150
+)
+Waiting for connection from debug servic
+#90     new List.of
+(dart:core-patch/array_patch.dart:39)
+Waiting for connection from debug servic
+#91     SetBase.toList
+(dart:collection/set.dart:119)
+Waiting for connection from debug servic
+#92     ProgramCompiler.visitBlock
+(package:dev_compiler/src/kernel/compile
+r.dart:4034)
+Waiting for connection from debug servic
+#93     Block.accept
+(package:kernel/ast.dart:9247)
+Waiting for connection from debug servic
+#94     ProgramCompiler._visitStatement
+(package:dev_compiler/src/kernel/compile
+r.dart:3853)
+Waiting for connection from debug servic
+#95
+ProgramCompiler._emitFunctionScopedBody
+(package:dev_compiler/src/kernel/compile
+r.dart:3886)
+Waiting for connection from debug servic
+#96
+ProgramCompiler._emitSyncFunctionBody.<a
+nonymous closure>
+(package:dev_compiler/src/kernel/compile
+r.dart:3592)
+Waiting for connection from debug servic
+#97     ProgramCompiler._withLetScope
+(package:dev_compiler/src/kernel/compile
+r.dart:2565)
+Waiting for connection from debug servic
+#98
+ProgramCompiler._withCurrentFunction
+(package:dev_compiler/src/kernel/compile
+r.dart:3629)
+Waiting for connection from debug servic
+#99
+ProgramCompiler._emitSyncFunctionBody
+(package:dev_compiler/src/kernel/compile
+r.dart:3588)
+Waiting for connection from debug servic
+#100    ProgramCompiler._emitFunction
+(package:dev_compiler/src/kernel/compile
+r.dart:3397)
+Waiting for connection from debug servic
+#101
+ProgramCompiler._emitMethodDeclaration.<
+anonymous closure>
+(package:dev_compiler/src/kernel/compile
+r.dart:2130)
+Waiting for connection from debug servic
+#102
+ProgramCompiler._withMethodDeclarationCo
+ntext
+(package:dev_compiler/src/kernel/compile
+r.dart:3656)
+Waiting for connection from debug servic
+#103
+ProgramCompiler._emitMethodDeclaration
+(package:dev_compiler/src/kernel/compile
+r.dart:2129)
+Waiting for connection from debug servic
+#104
+ProgramCompiler._emitClassMethods
+(package:dev_compiler/src/kernel/compile
+r.dart:2070)
+Waiting for connection from debug servic
+#105
+ProgramCompiler._emitClassDeclaration
+(package:dev_compiler/src/kernel/compile
+r.dart:905)
+Waiting for connection from debug servic
+#106    ProgramCompiler._emitClass
+(package:dev_compiler/src/kernel/compile
+r.dart:819)
+Waiting for connection from debug servic
+#107    List.forEach
+(dart:core-patch/growable_array.dart:416
+)
+Waiting for connection from debug servic
+#108    ProgramCompiler._emitLibrary
+(package:dev_compiler/src/kernel/compile
+r.dart:757)
+Waiting for connection from debug servic
+#109    List.forEach
+(dart:core-patch/growable_array.dart:416
+)
+Waiting for connection from debug servic
+#110    ProgramCompiler.emitModule
+(package:dev_compiler/src/kernel/compile
+r.dart:486)
+Waiting for connection from debug servic
+#111
+IncrementalJavaScriptBundler.compile
+(package:frontend_server/src/javascript_
+bundle.dart:223)
+Waiting for connection from debug servic
+#112
+FrontendCompiler.writeJavaScriptBundle
+(package:frontend_server/frontend_server
+.dart:801)
+Waiting for connection from debug servic
+<asynchronous suspension>
+Waiting for connection from debug servic
+#113    FrontendCompiler.compile
+(package:frontend_server/frontend_server
+.dart:661)
+Waiting for connection from debug servic
+<asynchronous suspension>
+Waiting for connection from debug servic
+#114    listenAndCompile.<anonymous
+closure>
+(package:frontend_server/frontend_server
+.dart:1311)
+Waiting for connection from debug servic
+<asynchronous suspension>
+Waiting for connection from debug servic
+the Dart compiler exited unexpectedly.
+Waiting for connection from debug service on Web Server...         31.0s
+Failed to compile application.
